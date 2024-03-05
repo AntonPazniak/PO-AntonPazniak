@@ -15,24 +15,8 @@ public class PortableAnymap {
     private int Width;
     private int color;
     private String head;
-
-    public PortableAnymap(int[][] matrix, int height, int width, int color) {
-        this.matrix = matrix;
-        this.height = height;
-        Width = width;
-        this.color = color;
-    }
     public PortableAnymap() {
     }
-
-    public PortableAnymap(Image image, int[][] matrix, int height, int width, int color) {
-        this.image = image;
-        this.matrix = matrix;
-        this.height = height;
-        Width = width;
-        this.color = color;
-    }
-
     public Image getImage() {
         return image;
     }

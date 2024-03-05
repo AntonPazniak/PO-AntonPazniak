@@ -4,9 +4,8 @@ import org.example.models.PortableAnymap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class Test {
 
@@ -17,6 +16,11 @@ public class Test {
             throw new RuntimeException(e);
         }
     }
+    public static String convertStringToAscii(String rawString) {
+        byte[] byteArray = rawString.getBytes(StandardCharsets.US_ASCII);
+        return new String(byteArray, StandardCharsets.US_ASCII);
+    }
+
 
     private static String convertFileToString(String ppmFilePath) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(ppmFilePath))) {
@@ -34,11 +38,7 @@ public class Test {
                 }
             }
 
-            // Полученный результат
-            String finalResult = result.toString().trim();
-            String[] elements = finalResult.split(" ");
-
-            return finalResult;
+            return convertStringToAscii(String.valueOf(result)).trim();
         }
     }
 
@@ -93,12 +93,6 @@ public class Test {
                 i= i+1;
             }
         }
-        for(int[] x : matrix){
-            for(int y : x){
-                System.out.print(y+ " ");
-            }
-            System.out.println();
-        }
         portableAnymap.setMatrix(matrix);
 
         portableAnymap.setImage(createPGMImageFromRGBMatrix(matrix));
@@ -113,12 +107,6 @@ public class Test {
                 matrix[x][y] = getColorValue(Integer.parseInt(elements[i]),Integer.parseInt(elements[i+1]),Integer.parseInt(elements[i+2]));
                 i= i+3;
             }
-        }
-        for(int[] x : matrix){
-            for(int y : x){
-                System.out.print(y+ " ");
-            }
-            System.out.println();
         }
         portableAnymap.setMatrix(matrix);
         portableAnymap.setImage(createImageFromRGBMatrix(matrix));

@@ -98,7 +98,7 @@ public class Window {
                 int dotIndex = openFile.getName().lastIndexOf('.');
                 if (dotIndex > 0) {
                     String fileExtension = openFile.getName().substring(dotIndex + 1);
-                    if(!fileExtension.equals("png") && !fileExtension.equals("jpg")){
+                    if(!fileExtension.equals("png") && !fileExtension.equals("jpg") && !fileExtension.equals("JPG")){
                         PortableAnymap portableAnymap = Test.start(openFile.getAbsolutePath());
                         originalIcon = new ImageIcon(portableAnymap.getImage());
                         resizeImage();
@@ -151,7 +151,7 @@ public class Window {
 //        int result = fileChooser.showSaveDialog(null);
 //
 //        if (result == JFileChooser.APPROVE_OPTION) {
-//            saveFolder = fileChooser.getSelectedFile();
+//            String path = fileChooser.getSelectedFile();
 //            System.out.println("Выбрана папка для сохранения: " + saveFolder.getAbsolutePath());
 //            // В этом месте вы можете использовать saveFolder для сохранения файлов
 //        } else {
