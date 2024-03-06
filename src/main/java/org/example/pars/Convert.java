@@ -7,16 +7,25 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class Test {
+public class Convert {
 
-    public static PortableAnymap start(String s){
+    public static PortableAnymap open(String s){
         try {
             return convertFileToMatrix(convertFileToString(s));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    public static String convertStringToAscii(String rawString) {
+
+    public static Boolean save(PortableAnymap portableAnymap){
+        if(portableAnymap.getHead().equals("P1")){
+            saveP1(portableAnymap);
+        }
+        return false;
+    }
+
+
+    private static String convertStringToAscii(String rawString) {
         byte[] byteArray = rawString.getBytes(StandardCharsets.US_ASCII);
         return new String(byteArray, StandardCharsets.US_ASCII);
     }
@@ -168,6 +177,38 @@ public class Test {
         return image;
     }
 
+    private static Boolean saveP1(PortableAnymap portableAnymap){
+        StringBuilder p1 = new StringBuilder();
+        p1.append(portableAnymap.getHead()).append("\n");
+        p1.append(portableAnymap.getHeight()).append(" ").append(portableAnymap.getWidth()).append("\n");
+        int n = 0;
+        for(int[] i : portableAnymap.getMatrix()){
+            for(int j : i){
+                if(n < 70){
+                    n++;
+                    p1.append(j);
+                }else{
+                    n = 1;
+                    p1.append("\n").append(j);
+                }
+            }
+        }
 
+        portableAnymap.setContent(String.valueOf(p1));
+        return writeFile(portableAnymap);
+    }
+
+    private static Boolean writeFile(PortableAnymap portableAnymap){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(portableAnymap.getFile()))) {
+            // Ваш код для записи данных в файл
+            writer.write(portableAnymap.getContent());
+
+           return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Ошибка при записи файла.");
+        }
+        return false;
+    }
 
 }

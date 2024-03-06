@@ -2,7 +2,7 @@ package org.example.window;
 
 
 import org.example.models.PortableAnymap;
-import org.example.pars.Test;
+import org.example.pars.Convert;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +26,7 @@ public class Window {
 
     private File openFile;
     private ImageIcon originalIcon;
+    private PortableAnymap portableAnymap;
     private final int width = 720;
     private final int height = 500;
 
@@ -67,7 +68,7 @@ public class Window {
         saveItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //chooseSaveFolder();
+                chooseSaveFolder();
             }
         });
 
@@ -99,7 +100,7 @@ public class Window {
                 if (dotIndex > 0) {
                     String fileExtension = openFile.getName().substring(dotIndex + 1);
                     if(!fileExtension.equals("png") && !fileExtension.equals("jpg") && !fileExtension.equals("JPG")){
-                        PortableAnymap portableAnymap = Test.start(openFile.getAbsolutePath());
+                        portableAnymap = Convert.open(openFile.getAbsolutePath());
                         originalIcon = new ImageIcon(portableAnymap.getImage());
                         resizeImage();
                     }else {
@@ -142,20 +143,21 @@ public class Window {
         }
     }
 
-//    private void chooseSaveFolder() {
-//        JFileChooser fileChooser = new JFileChooser();
-//
-//        // Устанавливаем режим выбора папки
-//        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//
-//        int result = fileChooser.showSaveDialog(null);
-//
-//        if (result == JFileChooser.APPROVE_OPTION) {
-//            String path = fileChooser.getSelectedFile();
-//            System.out.println("Выбрана папка для сохранения: " + saveFolder.getAbsolutePath());
-//            // В этом месте вы можете использовать saveFolder для сохранения файлов
-//        } else {
-//            System.out.println("Отменено пользователем.");
-//        }
-//    }
+    private void chooseSaveFolder() {
+        JFileChooser fileChooser = new JFileChooser();
+
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        int result = fileChooser.showSaveDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFolder = fileChooser.getSelectedFile();
+            portableAnymap.setFile(new File(selectedFolder,openFile.getName()));
+            Convert.save(portableAnymap);
+
+
+        } else {
+            System.out.println("Отменено пользователем.");
+        }
+    }
 }

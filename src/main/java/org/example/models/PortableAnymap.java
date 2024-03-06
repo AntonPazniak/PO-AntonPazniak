@@ -2,6 +2,7 @@ package org.example.models;
 
 
 import java.awt.*;
+import java.io.File;
 
 //@Getter
 //@Setter
@@ -15,6 +16,25 @@ public class PortableAnymap {
     private int Width;
     private int color;
     private String head;
+    private File file;
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     public PortableAnymap() {
     }
     public Image getImage() {
