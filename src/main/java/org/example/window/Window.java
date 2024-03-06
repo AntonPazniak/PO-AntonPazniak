@@ -3,6 +3,7 @@ package org.example.window;
 
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
+import org.example.point_operation.Desaturation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,11 @@ public class Window {
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JLabel imageLabel;
-
     private JMenuItem openItem;
     private JMenuItem saveItem;
     private JMenuItem exitItem;
+    private JMenu pointMenu;
+    private JMenuItem desaturationItem;
 
     private File openFile;
     private ImageIcon originalIcon;
@@ -44,12 +46,20 @@ public class Window {
         saveItem = new JMenuItem("seave");
         exitItem = new JMenuItem("exit");
 
+        pointMenu = new JMenu("Point");
+
+        desaturationItem = new JMenuItem("Desaturation");
+
+        pointMenu.add(desaturationItem);
+
+
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.addSeparator();
         fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
+        menuBar.add(pointMenu);
 
         frame.setJMenuBar(menuBar);
 
@@ -69,6 +79,14 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 chooseSaveFolder();
+            }
+        });
+        desaturationItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Desaturation.convert(portableAnymap);
+                originalIcon = new ImageIcon(portableAnymap.getImage());
+                resizeImage();
             }
         });
 

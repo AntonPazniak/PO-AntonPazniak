@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+import static org.example.pars.CreateImageFromMatrix.*;
+
 public class Convert {
 
     public static PortableAnymap open(String s){
@@ -63,8 +65,8 @@ public class Convert {
         PortableAnymap portableAnymap = new PortableAnymap();
         portableAnymap.setHead(elements[0]);
 
-        portableAnymap.setHeight(Integer.parseInt(elements[1]));
-        portableAnymap.setWidth(Integer.parseInt(elements[2]));
+        portableAnymap.setHeight(Integer.parseInt(elements[2]));
+        portableAnymap.setWidth(Integer.parseInt(elements[1]));
         if(elements[0].equals("P1") || elements[0].equals("P4")){
             convertP1(portableAnymap, s);
         } else if(elements[0].equals("P2") || elements[0].equals("P5")){
@@ -100,7 +102,7 @@ public class Convert {
 
     private static void convertP2(PortableAnymap portableAnymap, String s){
         String[] elements = s.split(" ");
-        int [][] matrix = new int[Integer.parseInt(elements[1])][Integer.parseInt(elements[2])];
+        int [][] matrix = new int[portableAnymap.getHeight()][portableAnymap.getWidth()];
         portableAnymap.setColor(Integer.parseInt(elements[3]));
         int i = 4;
         for(int x = 0; x< portableAnymap.getHeight(); x++){
@@ -116,8 +118,7 @@ public class Convert {
 
     private static void convertP3(PortableAnymap portableAnymap, String s){
         String[] elements = s.split(" ");
-        int [][] matrix = new int[Integer.parseInt(elements[1])][Integer.parseInt(elements[2])];
-        portableAnymap.setColor(Integer.parseInt(elements[3]));
+        int [][] matrix = new int[portableAnymap.getHeight()][portableAnymap.getWidth()];
         int i = 4;
         for(int x = 0; x< portableAnymap.getHeight(); x++){
             for(int y = 0; y< portableAnymap.getWidth(); y++){
@@ -129,11 +130,11 @@ public class Convert {
         portableAnymap.setImage(createImageFromRGBMatrix(matrix));
     }
 
-    private static int getColorValue(int red, int green, int blue) {
+    public static int getColorValue(int red, int green, int blue) {
         return (red << 16) | (green << 8) | blue;
     }
 
-    private static int[] getRGBValues(int colorValue) {
+    public static int[] getRGBValues(int colorValue) {
         int red = (colorValue >> 16) & 0xFF;
         int green = (colorValue >> 8) & 0xFF;
         int blue = colorValue & 0xFF;
@@ -141,57 +142,6 @@ public class Convert {
         return new int[]{red, green, blue};
     }
 
-    private static Image createImageFromRGBMatrix(int[][] rgbMatrix) {
-        int width = rgbMatrix[0].length;
-        int height = rgbMatrix.length;
-
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics g = image.getGraphics();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int rgb = new Color(rgbMatrix[y][x]).getRGB();
-                image.setRGB(x, y, rgb);
-            }
-        }
-
-        return image;
-    }
-
-    public static BufferedImage createPBMImageFromBinaryMatrix(int[][] binaryMatrix) {
-        int width = binaryMatrix[0].length;
-        int height = binaryMatrix.length;
-
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixelValue = (binaryMatrix[y][x] == 0) ? 0xFFFFFF : 0x000000;
-                image.setRGB(x, y, pixelValue);
-            }
-        }
-
-        return image;
-    }
-
-    public static BufferedImage createPGMImageFromRGBMatrix(int[][] rgbMatrix) {
-        int width = rgbMatrix[0].length;
-        int height = rgbMatrix.length;
-
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int rgb = rgbMatrix[y][x];
-                int grayscale = (int) (0.299 * ((rgb >> 16) & 0xFF) + 0.587 * ((rgb >> 8) & 0xFF) + 0.114 * (rgb & 0xFF));
-                int invertedGray = 255 - grayscale;
-                int invertedGrayPixel = (invertedGray << 16) | (invertedGray << 8) | invertedGray;
-                image.setRGB(x, y, invertedGrayPixel);
-            }
-        }
-
-        return image;
-    }
 
     private static Boolean saveP1(PortableAnymap portableAnymap){
         StringBuilder p1 = new StringBuilder();
