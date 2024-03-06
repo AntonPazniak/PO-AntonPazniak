@@ -19,9 +19,11 @@ public class Convert {
 
     public static Boolean save(PortableAnymap portableAnymap){
         if(portableAnymap.getHead().equals("P1")){
-            saveP1(portableAnymap);
+            return saveP1(portableAnymap);
         } else if (portableAnymap.getHead().equals("P2")) {
-            saveP2(portableAnymap);
+            return saveP2(portableAnymap);
+        }else if (portableAnymap.getHead().equals("P3")) {
+            return saveP3(portableAnymap);
         }
 
 
@@ -115,6 +117,7 @@ public class Convert {
     private static void convertP3(PortableAnymap portableAnymap, String s){
         String[] elements = s.split(" ");
         int [][] matrix = new int[Integer.parseInt(elements[1])][Integer.parseInt(elements[2])];
+        portableAnymap.setColor(Integer.parseInt(elements[3]));
         int i = 4;
         for(int x = 0; x< portableAnymap.getHeight(); x++){
             for(int y = 0; y< portableAnymap.getWidth(); y++){
@@ -128,6 +131,14 @@ public class Convert {
 
     private static int getColorValue(int red, int green, int blue) {
         return (red << 16) | (green << 8) | blue;
+    }
+
+    private static int[] getRGBValues(int colorValue) {
+        int red = (colorValue >> 16) & 0xFF;
+        int green = (colorValue >> 8) & 0xFF;
+        int blue = colorValue & 0xFF;
+
+        return new int[]{red, green, blue};
     }
 
     private static Image createImageFromRGBMatrix(int[][] rgbMatrix) {
@@ -211,6 +222,24 @@ public class Convert {
         for(int[] i : portableAnymap.getMatrix()){
             for(int j : i){
                 p1.append(j).append("\n");
+            }
+        }
+
+        portableAnymap.setContent(String.valueOf(p1));
+        return writeFile(portableAnymap);
+    }
+
+    private static Boolean saveP3(PortableAnymap portableAnymap){
+        StringBuilder p1 = new StringBuilder();
+        p1.append(portableAnymap.getHead()).append("\n");
+        p1.append(portableAnymap.getHeight()).append(" ").append(portableAnymap.getWidth()).append("\n");
+        p1.append(portableAnymap.getColor()).append("\n");
+        for(int[] i : portableAnymap.getMatrix()){
+            for(int j : i){
+                int [] colors = getRGBValues(j);
+                p1.append(colors[0]).append("\n");
+                p1.append(colors[1]).append("\n");
+                p1.append(colors[2]).append("\n");
             }
         }
 
