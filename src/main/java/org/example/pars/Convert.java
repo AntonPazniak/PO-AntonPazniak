@@ -20,7 +20,11 @@ public class Convert {
     public static Boolean save(PortableAnymap portableAnymap){
         if(portableAnymap.getHead().equals("P1")){
             saveP1(portableAnymap);
+        } else if (portableAnymap.getHead().equals("P2")) {
+            saveP2(portableAnymap);
         }
+
+
         return false;
     }
 
@@ -95,6 +99,7 @@ public class Convert {
     private static void convertP2(PortableAnymap portableAnymap, String s){
         String[] elements = s.split(" ");
         int [][] matrix = new int[Integer.parseInt(elements[1])][Integer.parseInt(elements[2])];
+        portableAnymap.setColor(Integer.parseInt(elements[3]));
         int i = 4;
         for(int x = 0; x< portableAnymap.getHeight(); x++){
             for(int y = 0; y< portableAnymap.getWidth(); y++){
@@ -191,6 +196,21 @@ public class Convert {
                     n = 1;
                     p1.append("\n").append(j);
                 }
+            }
+        }
+
+        portableAnymap.setContent(String.valueOf(p1));
+        return writeFile(portableAnymap);
+    }
+
+    private static Boolean saveP2(PortableAnymap portableAnymap){
+        StringBuilder p1 = new StringBuilder();
+        p1.append(portableAnymap.getHead()).append("\n");
+        p1.append(portableAnymap.getHeight()).append(" ").append(portableAnymap.getWidth()).append("\n");
+        p1.append(portableAnymap.getColor()).append("\n");
+        for(int[] i : portableAnymap.getMatrix()){
+            for(int j : i){
+                p1.append(j).append("\n");
             }
         }
 
