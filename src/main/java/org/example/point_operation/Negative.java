@@ -15,37 +15,34 @@ public class Negative {
     }
 
     private static void convertP1(PortableAnymap portableAnymap) {
-        int[][] newMatrix = new int[portableAnymap.getHeight()][portableAnymap.getWidth()];
         for (int i = 0; i < portableAnymap.getHeight(); i++) {
             for (int j = 0; j < portableAnymap.getWidth(); j++) {
-                newMatrix[i][j] = 1 - portableAnymap.getMatrix()[i][j];
+                int color = 255 -portableAnymap.getMatrix()[i][j][2];
+                portableAnymap.getMatrix()[i][j] = new int [] {color,color,color};
             }
         }
-        portableAnymap.setMatrix(newMatrix);
-        portableAnymap.setImage(CreateImageFromMatrix.createPBMImageFromBinaryMatrix(newMatrix));
+        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 
     private static void convertP2(PortableAnymap portableAnymap) {
-        int[][] newMatrix = new int[portableAnymap.getHeight()][portableAnymap.getWidth()];
         for (int i = 0; i < portableAnymap.getHeight(); i++) {
             for (int j = 0; j < portableAnymap.getWidth(); j++) {
-                newMatrix[i][j] = portableAnymap.getColor() - portableAnymap.getMatrix()[i][j];
+                int color = portableAnymap.getColor() - portableAnymap.getMatrix()[i][j][0];
+                portableAnymap.getMatrix()[i][j] = new int[] {color,color,color};
             }
         }
-        portableAnymap.setMatrix(newMatrix);
-        portableAnymap.setImage(CreateImageFromMatrix.createPPMImageFromRGBMatrix(newMatrix));
+        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 
     private static void convertP3(PortableAnymap portableAnymap) {
-        int[][] newMatrix = new int[portableAnymap.getHeight()][portableAnymap.getWidth()];
-        int maxColor = portableAnymap.getColor() * 65536 + portableAnymap.getColor() * 256 + portableAnymap.getColor();
-        System.out.println(maxColor);
         for (int i = 0; i < portableAnymap.getHeight(); i++) {
             for (int j = 0; j < portableAnymap.getWidth(); j++) {
-                newMatrix[i][j] = maxColor - portableAnymap.getMatrix()[i][j];
+                portableAnymap.getMatrix()[i][j] = new int[] {
+                        portableAnymap.getColor() - portableAnymap.getMatrix()[i][j][0],
+                        portableAnymap.getColor() - portableAnymap.getMatrix()[i][j][1],
+                        portableAnymap.getColor() - portableAnymap.getMatrix()[i][j][2]};
             }
         }
-        portableAnymap.setMatrix(newMatrix);
-        portableAnymap.setImage(CreateImageFromMatrix.createPPMImageFromRGBMatrix(newMatrix));
+        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 }

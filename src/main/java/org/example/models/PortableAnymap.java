@@ -11,8 +11,7 @@ import java.io.File;
 public class PortableAnymap {
 
     private Image image;
-    private int [][] matrix;
-    private int [][] matrixP3;
+    private int [][][] matrix;
     private int height;
     private int Width;
     private int color;
@@ -46,14 +45,6 @@ public class PortableAnymap {
         this.image = image;
     }
 
-    public int[][] getMatrix() {
-        return matrix;
-    }
-
-    public void setMatrix(int[][] matrix) {
-        this.matrix = matrix;
-    }
-
     public int getHeight() {
         return height;
     }
@@ -84,5 +75,13 @@ public class PortableAnymap {
 
     public void setHead(String head) {
         this.head = head;
+    }
+
+    public int[][][] getMatrix() {
+        return matrix;
+    }
+
+    public void setMatrix(int[][][] matrix) {
+        this.matrix = matrix;
     }
 }

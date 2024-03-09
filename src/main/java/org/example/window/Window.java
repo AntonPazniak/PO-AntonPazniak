@@ -88,7 +88,7 @@ public class Window {
         desaturationItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Desaturation.convert(portableAnymap);
+                //Desaturation.convert(portableAnymap);
                 originalIcon = new ImageIcon(portableAnymap.getImage());
                 resizeImage();
             }
