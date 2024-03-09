@@ -12,6 +12,7 @@ public class PortableAnymap {
 
     private Image image;
     private int [][] matrix;
+    private int [][] matrixP3;
     private int height;
     private int Width;
     private int color;

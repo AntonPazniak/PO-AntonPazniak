@@ -2,6 +2,7 @@ package org.example.pars;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class CreateImageFromMatrix {
 
@@ -59,6 +60,9 @@ public class CreateImageFromMatrix {
     private static int getGrayColorValue(int color) {
         return (color << 16) | (color << 8) | color;
     }
+    public static int getColorValue(int red, int green, int blue) {
+        return (red << 16) | (green << 8) | blue;
+    }
     private static int[] getRGBValues(int colorValue) {
         int red = (colorValue >> 16) & 0xFF;
         int green = (colorValue >> 8) & 0xFF;
@@ -66,6 +70,4 @@ public class CreateImageFromMatrix {
 
         return new int[]{red, green, blue};
     }
-
-
 }

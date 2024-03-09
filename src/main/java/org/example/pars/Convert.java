@@ -123,6 +123,7 @@ public class Convert {
         for(int x = 0; x< portableAnymap.getHeight(); x++){
             for(int y = 0; y< portableAnymap.getWidth(); y++){
                 matrix[x][y] = getColorValue(Integer.parseInt(elements[i]),Integer.parseInt(elements[i+1]),Integer.parseInt(elements[i+2]));
+
                 i= i+3;
             }
         }
