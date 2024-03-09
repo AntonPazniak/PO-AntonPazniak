@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.io.*;
+import java.io.File;
 
 
 public class Window {
@@ -88,7 +88,7 @@ public class Window {
         desaturationItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Desaturation.convert(portableAnymap);
+                Desaturation.convert(portableAnymap);
                 originalIcon = new ImageIcon(portableAnymap.getImage());
                 resizeImage();
             }
