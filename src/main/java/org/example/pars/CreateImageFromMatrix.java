@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class CreateImageFromMatrix {
 
-    public static BufferedImage createPGMImageFromRGBMatrix(int[][] rgbMatrix) {
+    public static BufferedImage createPPMImageFromRGBMatrix(int[][] rgbMatrix) {
         int width = rgbMatrix[0].length;
         int height = rgbMatrix.length;
 
@@ -13,11 +13,8 @@ public class CreateImageFromMatrix {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int rgb = rgbMatrix[y][x];
-                int grayscale = (int) (0.299 * ((rgb >> 16) & 0xFF) + 0.587 * ((rgb >> 8) & 0xFF) + 0.114 * (rgb & 0xFF));
-                int invertedGray = 255 - grayscale;
-                int invertedGrayPixel = (invertedGray << 16) | (invertedGray << 8) | invertedGray;
-                image.setRGB(x, y, invertedGrayPixel);
+                int rgb = getGrayColorValue(rgbMatrix[y][x]);
+                image.setRGB(x, y, rgb);
             }
         }
 
@@ -57,5 +54,18 @@ public class CreateImageFromMatrix {
 
         return image;
     }
+
+
+    private static int getGrayColorValue(int color) {
+        return (color << 16) | (color << 8) | color;
+    }
+    private static int[] getRGBValues(int colorValue) {
+        int red = (colorValue >> 16) & 0xFF;
+        int green = (colorValue >> 8) & 0xFF;
+        int blue = colorValue & 0xFF;
+
+        return new int[]{red, green, blue};
+    }
+
 
 }

@@ -113,7 +113,7 @@ public class Convert {
         }
         portableAnymap.setMatrix(matrix);
 
-        portableAnymap.setImage(createPGMImageFromRGBMatrix(matrix));
+        portableAnymap.setImage(createPPMImageFromRGBMatrix(matrix));
     }
 
     private static void convertP3(PortableAnymap portableAnymap, String s){

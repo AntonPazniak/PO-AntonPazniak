@@ -29,6 +29,6 @@ public class Desaturation {
             }
         }
         portableAnymap.setMatrix(newMatrix);
-        portableAnymap.setImage(CreateImageFromMatrix.createPGMImageFromRGBMatrix(newMatrix));
+        portableAnymap.setImage(CreateImageFromMatrix.createPPMImageFromRGBMatrix(newMatrix));
     }
 }

@@ -4,6 +4,7 @@ package org.example.window;
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
 import org.example.point_operation.Desaturation;
+import org.example.point_operation.Negative;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,7 @@ public class Window {
     private JMenuItem exitItem;
     private JMenu pointMenu;
     private JMenuItem desaturationItem;
+    private JMenuItem negativeItem;
 
     private File openFile;
     private ImageIcon originalIcon;
@@ -49,8 +51,10 @@ public class Window {
         pointMenu = new JMenu("Point");
 
         desaturationItem = new JMenuItem("Desaturation");
+        negativeItem = new JMenuItem("Negative");
 
         pointMenu.add(desaturationItem);
+        pointMenu.add(negativeItem);
 
 
         fileMenu.add(openItem);
@@ -85,6 +89,14 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Desaturation.convert(portableAnymap);
+                originalIcon = new ImageIcon(portableAnymap.getImage());
+                resizeImage();
+            }
+        });
+        negativeItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Negative.convert(portableAnymap);
                 originalIcon = new ImageIcon(portableAnymap.getImage());
                 resizeImage();
             }
