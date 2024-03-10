@@ -3,6 +3,7 @@ package org.example.window;
 
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
+import org.example.point_operation.Contrast;
 import org.example.point_operation.Desaturation;
 import org.example.point_operation.Negative;
 
@@ -18,16 +19,12 @@ import java.io.File;
 public class Window {
 
     private JFrame frame;
+    private final JMenuItem openItem, saveItem, exitItem;
     private JMenuBar menuBar;
     private JMenu fileMenu;
+    private final JMenu pointMenu;
+    private final JMenuItem desaturationItem, negativeItem, contrastItem;
     private JLabel imageLabel;
-    private JMenuItem openItem;
-    private JMenuItem saveItem;
-    private JMenuItem exitItem;
-    private JMenu pointMenu;
-    private JMenuItem desaturationItem;
-    private JMenuItem negativeItem;
-
     private File openFile;
     private ImageIcon originalIcon;
     private PortableAnymap portableAnymap;
@@ -52,9 +49,11 @@ public class Window {
 
         desaturationItem = new JMenuItem("Desaturation");
         negativeItem = new JMenuItem("Negative");
+        contrastItem = new JMenuItem("Contrast");
 
         pointMenu.add(desaturationItem);
         pointMenu.add(negativeItem);
+        pointMenu.add(contrastItem);
 
 
         fileMenu.add(openItem);
@@ -97,6 +96,15 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Negative.convert(portableAnymap);
+                originalIcon = new ImageIcon(portableAnymap.getImage());
+                resizeImage();
+            }
+        });
+        contrastItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                portableAnymap.setImageLabel(imageLabel);
+                Contrast.convert(portableAnymap);
                 originalIcon = new ImageIcon(portableAnymap.getImage());
                 resizeImage();
             }
