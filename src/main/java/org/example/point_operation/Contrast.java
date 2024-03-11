@@ -3,24 +3,42 @@ package org.example.point_operation;
 import org.example.models.PortableAnymap;
 import org.example.pars.CreateImageFromMatrix;
 import org.example.window.Slider;
+import org.example.window.Window;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Contrast {
 
-    public static void convert(PortableAnymap portableAnymap) {
+
+    public static void convert(PortableAnymap portableAnymap, Window window) {
         Slider slider = new Slider("Test", 100, -100, 0);
-        int[][][] newMatrix = portableAnymap.getMatrix();
-        slider.getSlider().addChangeListener(new ChangeListener() {
+        slider.getApplyButton().addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                int value = (slider.getSlider().getValue() + 100);
-                int[][][] workMatrix = increaseContrast(portableAnymap.getMatrix(), value);
-                portableAnymap.getImageLabel().setIcon(new ImageIcon(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix)));
+            public void actionPerformed(ActionEvent e) {
+                int[][][] workMatrix = portableAnymap.copyMatrix();
+                float value = (slider.getSlider().getValue());
+                if (value > 0) {
+                    value = value / 10;
+                } else {
+                    value = Math.abs(value / 100 - 1);
+                }
+                increaseContrast(workMatrix, value);
+                portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix));
+                window.resizeImage();
             }
         });
+        slider.getSaveButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int value = (slider.getSlider().getValue() / 10);
+                increaseContrast(portableAnymap.getMatrix(), value);
+                portableAnymap.updateImage();
+                window.resizeImage();
+                slider.getFrame().dispose();
+            }
+        });
+
     }
 
     private static int getAverageMatrix(int[][][] matrix) {
@@ -31,11 +49,6 @@ public class Contrast {
             }
         }
         return average / matrix.length / 3;
-    }
-
-    private static void convertP2P3(PortableAnymap portableAnymap) {
-        portableAnymap.setMatrix(increaseContrast(portableAnymap.getMatrix(), 1.2));
-        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 
     private static int[][][] increaseContrast(int[][][] imageMatrix, double factor) {

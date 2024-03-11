@@ -107,7 +107,7 @@ public class Window {
         contrastItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Contrast.convert(portableAnymap);
+                Contrast.convert(portableAnymap, Window.this);
                 resizeImage();
             }
         });
