@@ -2,7 +2,6 @@ package org.example.point_operation;
 
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
-import org.example.pars.CreateImageFromMatrix;
 
 import javax.swing.*;
 import java.io.File;
@@ -29,7 +28,7 @@ public class SDP {
                 }
             }
         }
-
+        portableAnymap.updateImage();
     }
 
 
@@ -45,7 +44,6 @@ public class SDP {
                 }
             }
         }
-        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 
 
@@ -61,7 +59,6 @@ public class SDP {
                 }
             }
         }
-        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 
     private static void product(PortableAnymap portableAnymap, PortableAnymap portableAnymap1) {
@@ -74,11 +71,14 @@ public class SDP {
                             matrix[i][j][l] = 0;
                         }
                     }
+                } else {
+                    for (int l = 0; l < 3; l++) {
+                        matrix[i][j][l] = 0;
+
+                    }
                 }
             }
         }
-        System.out.println("end");
-        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
     }
 
 }
