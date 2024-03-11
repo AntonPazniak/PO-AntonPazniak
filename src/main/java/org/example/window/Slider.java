@@ -18,12 +18,12 @@ public class Slider {
 
     private JFrame frame;
     private JSlider slider;
-    private JLabel imageLabel;
+    private JButton saveButton, applyButton;
 
     public Slider(String title, int max, int min, int start) {
         frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.setSize(300, 200);
+        frame.setSize(300, 150);
         slider = new JSlider(JSlider.HORIZONTAL, min, max, start);
         slider.setMajorTickSpacing(max / 2);
         slider.setMinorTickSpacing(1);
@@ -33,14 +33,20 @@ public class Slider {
         JPanel panel = new JPanel();
         panel.add(slider);
 
-        imageLabel = new JLabel();
-        frame.getContentPane().add(imageLabel, BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        saveButton = new JButton("Save");
+        applyButton = new JButton("Apply");
 
-        frame.add(panel, BorderLayout.CENTER);
+        buttonPanel.add(applyButton);
+        buttonPanel.add(saveButton);
 
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.add(panel, BorderLayout.NORTH);
 
         frame.setVisible(true);
     }
+
 
     public static void main(String[] args) {
 

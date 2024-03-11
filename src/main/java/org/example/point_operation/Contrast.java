@@ -12,7 +12,6 @@ public class Contrast {
 
     public static void convert(PortableAnymap portableAnymap) {
         Slider slider = new Slider("Test", 100, -100, 0);
-        slider.getImageLabel().setIcon(new ImageIcon(portableAnymap.getImage()));
         int[][][] newMatrix = portableAnymap.getMatrix();
         slider.getSlider().addChangeListener(new ChangeListener() {
             @Override

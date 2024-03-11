@@ -6,6 +6,7 @@ import org.example.pars.Convert;
 import org.example.point_operation.Contrast;
 import org.example.point_operation.Desaturation;
 import org.example.point_operation.Negative;
+import org.example.point_operation.SDP;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class Window {
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private final JMenu pointMenu;
-    private final JMenuItem desaturationItem, negativeItem, contrastItem;
+    private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem;
     private JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -50,11 +51,18 @@ public class Window {
         desaturationItem = new JMenuItem("Desaturation");
         negativeItem = new JMenuItem("Negative");
         contrastItem = new JMenuItem("Contrast");
+        brightnessItem = new JMenuItem("Brightness");
+        sumItem = new JMenuItem("Sum");
+        differenceItem = new JMenuItem("Difference");
+        productItem = new JMenuItem("Product");
 
         pointMenu.add(desaturationItem);
         pointMenu.add(negativeItem);
         pointMenu.add(contrastItem);
-
+        pointMenu.add(brightnessItem);
+        pointMenu.add(sumItem);
+        pointMenu.add(differenceItem);
+        pointMenu.add(productItem);
 
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
@@ -88,7 +96,6 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Desaturation.convert(portableAnymap);
-                originalIcon = new ImageIcon(portableAnymap.getImage());
                 resizeImage();
             }
         });
@@ -96,16 +103,40 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Negative.convert(portableAnymap);
-                originalIcon = new ImageIcon(portableAnymap.getImage());
                 resizeImage();
             }
         });
         contrastItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                portableAnymap.setImageLabel(imageLabel);
                 Contrast.convert(portableAnymap);
-                originalIcon = new ImageIcon(portableAnymap.getImage());
+                resizeImage();
+            }
+        });
+        brightnessItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        sumItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SDP.convert(0, portableAnymap);
+                resizeImage();
+            }
+        });
+        differenceItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SDP.convert(1, portableAnymap);
+                resizeImage();
+            }
+        });
+        productItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SDP.convert(2, portableAnymap);
                 resizeImage();
             }
         });
@@ -139,6 +170,7 @@ public class Window {
                     String fileExtension = openFile.getName().substring(dotIndex + 1);
                     if(!fileExtension.equals("png") && !fileExtension.equals("jpg") && !fileExtension.equals("JPG")){
                         portableAnymap = Convert.open(openFile.getAbsolutePath());
+                        portableAnymap.setImageLabel(imageLabel);
                         originalIcon = new ImageIcon(portableAnymap.getImage());
                         resizeImage();
                     }else {
@@ -152,33 +184,32 @@ public class Window {
 
 
     private void resizeImage() {
-        if (originalIcon != null) {
-            // Получаем размеры окна
-            int windowWidth = imageLabel.getWidth();
-            int windowHeight = imageLabel.getHeight();
+        originalIcon = new ImageIcon(portableAnymap.getImage());
+        // Получаем размеры окна
+        int windowWidth = imageLabel.getWidth();
+        int windowHeight = imageLabel.getHeight();
 
-            // Получаем размеры изображения
-            int originalWidth = originalIcon.getIconWidth();
-            int originalHeight = originalIcon.getIconHeight();
+        // Получаем размеры изображения
+        int originalWidth = originalIcon.getIconWidth();
+        int originalHeight = originalIcon.getIconHeight();
 
-            // Вычисляем новые размеры для подстройки под окно
-            int newWidth, newHeight;
-            double aspectRatio = (double) originalWidth / originalHeight;
+        // Вычисляем новые размеры для подстройки под окно
+        int newWidth, newHeight;
+        double aspectRatio = (double) originalWidth / originalHeight;
 
-            if (windowWidth / aspectRatio <= windowHeight) {
-                newWidth = windowWidth;
-                newHeight = (int) (windowWidth / aspectRatio);
-            } else {
-                newHeight = windowHeight;
-                newWidth = (int) (windowHeight * aspectRatio);
-            }
-
-            // Масштабируем изображение
-            Image scaledImage = originalIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-
-            // Обновляем метку с новым изображением
-            imageLabel.setIcon(new ImageIcon(scaledImage));
+        if (windowWidth / aspectRatio <= windowHeight) {
+            newWidth = windowWidth;
+            newHeight = (int) (windowWidth / aspectRatio);
+        } else {
+            newHeight = windowHeight;
+            newWidth = (int) (windowHeight * aspectRatio);
         }
+
+        // Масштабируем изображение
+        Image scaledImage = originalIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+
+        // Обновляем метку с новым изображением
+        imageLabel.setIcon(new ImageIcon(scaledImage));
     }
 
     private void chooseSaveFolder() {
