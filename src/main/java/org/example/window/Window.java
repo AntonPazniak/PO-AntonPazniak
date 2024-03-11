@@ -1,12 +1,10 @@
 package org.example.window;
 
 
+import lombok.Getter;
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
-import org.example.point_operation.Contrast;
-import org.example.point_operation.Desaturation;
-import org.example.point_operation.Negative;
-import org.example.point_operation.SDP;
+import org.example.point_operation.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +14,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 
-
+@Getter
 public class Window {
 
     private JFrame frame;
@@ -116,7 +114,8 @@ public class Window {
         brightnessItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                Brightness.convert(portableAnymap, Window.this);
+                resizeImage();
             }
         });
         sumItem.addActionListener(new ActionListener() {
@@ -183,33 +182,35 @@ public class Window {
     }
 
 
-    private void resizeImage() {
-        originalIcon = new ImageIcon(portableAnymap.getImage());
-        // Получаем размеры окна
-        int windowWidth = imageLabel.getWidth();
-        int windowHeight = imageLabel.getHeight();
+    public void resizeImage() {
+        if (portableAnymap != null) {
+            originalIcon = new ImageIcon(portableAnymap.getImage());
+            // Получаем размеры окна
+            int windowWidth = imageLabel.getWidth();
+            int windowHeight = imageLabel.getHeight();
 
-        // Получаем размеры изображения
-        int originalWidth = originalIcon.getIconWidth();
-        int originalHeight = originalIcon.getIconHeight();
+            // Получаем размеры изображения
+            int originalWidth = originalIcon.getIconWidth();
+            int originalHeight = originalIcon.getIconHeight();
 
-        // Вычисляем новые размеры для подстройки под окно
-        int newWidth, newHeight;
-        double aspectRatio = (double) originalWidth / originalHeight;
+            // Вычисляем новые размеры для подстройки под окно
+            int newWidth, newHeight;
+            double aspectRatio = (double) originalWidth / originalHeight;
 
-        if (windowWidth / aspectRatio <= windowHeight) {
-            newWidth = windowWidth;
-            newHeight = (int) (windowWidth / aspectRatio);
-        } else {
-            newHeight = windowHeight;
-            newWidth = (int) (windowHeight * aspectRatio);
+            if (windowWidth / aspectRatio <= windowHeight) {
+                newWidth = windowWidth;
+                newHeight = (int) (windowWidth / aspectRatio);
+            } else {
+                newHeight = windowHeight;
+                newWidth = (int) (windowHeight * aspectRatio);
+            }
+
+            // Масштабируем изображение
+            Image scaledImage = originalIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+
+            // Обновляем метку с новым изображением
+            imageLabel.setIcon(new ImageIcon(scaledImage));
         }
-
-        // Масштабируем изображение
-        Image scaledImage = originalIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-
-        // Обновляем метку с новым изображением
-        imageLabel.setIcon(new ImageIcon(scaledImage));
     }
 
     private void chooseSaveFolder() {
