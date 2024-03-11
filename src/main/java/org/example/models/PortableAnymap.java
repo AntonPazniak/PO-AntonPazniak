@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.pars.CreateImageFromMatrix;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,4 +26,8 @@ public class PortableAnymap {
     private File file;
     private String content;
     private JLabel imageLabel;
+
+    public void updateImage() {
+        image = CreateImageFromMatrix.createImageFromRGBMatrix(matrix);
+    }
 }
