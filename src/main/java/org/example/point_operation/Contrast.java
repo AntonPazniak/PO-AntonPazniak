@@ -2,8 +2,8 @@ package org.example.point_operation;
 
 import org.example.models.PortableAnymap;
 import org.example.pars.CreateImageFromMatrix;
-import org.example.window.Slider;
-import org.example.window.Window;
+import org.example.window.MainWindow;
+import org.example.window.SliderWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,19 +11,14 @@ import java.awt.event.ActionListener;
 public class Contrast {
 
 
-    public static void convert(PortableAnymap portableAnymap, Window window) {
-        Slider slider = new Slider("Test", 100, -100, 0);
+    public static void convert(PortableAnymap portableAnymap, MainWindow window) {
+        SliderWindow slider = new SliderWindow("Test", 100, -100, 0);
         slider.getApplyButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[][][] workMatrix = portableAnymap.copyMatrix();
-                float value = (slider.getSlider().getValue());
-                if (value > 0) {
-                    value = value / 10;
-                } else {
-                    value = Math.abs(value / 100 - 1);
-                }
-                increaseContrast(workMatrix, value);
+                increaseContrast(workMatrix,
+                        getFactor(slider.getSlider().getValue()));
                 portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix));
                 window.resizeImage();
             }
@@ -31,14 +26,23 @@ public class Contrast {
         slider.getSaveButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int value = (slider.getSlider().getValue() / 10);
-                increaseContrast(portableAnymap.getMatrix(), value);
+                increaseContrast(portableAnymap.getMatrix(),
+                        getFactor(slider.getSlider().getValue()));
                 portableAnymap.updateImage();
                 window.resizeImage();
                 slider.getFrame().dispose();
             }
         });
 
+    }
+
+    private static float getFactor(float factor) {
+        if (factor > 0) {
+            factor = factor / 10;
+        } else {
+            factor = Math.abs(factor / 100 + 1);
+        }
+        return factor;
     }
 
     private static int getAverageMatrix(int[][][] matrix) {

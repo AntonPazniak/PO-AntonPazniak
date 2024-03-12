@@ -14,13 +14,13 @@ import java.awt.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Slider {
+public class SliderWindow {
 
     private JFrame frame;
     private JSlider slider;
     private JButton saveButton, applyButton;
 
-    public Slider(String title, int max, int min, int start) {
+    public SliderWindow(String title, int max, int min, int start) {
         frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.setSize(300, 150);
@@ -50,7 +50,7 @@ public class Slider {
 
     public static void main(String[] args) {
 
-        Slider slider1 = new Slider("Test", 10, -10, 0);
+        SliderWindow slider1 = new SliderWindow("Test", 10, -10, 0);
 
         slider1.slider.addChangeListener(new ChangeListener() {
             @Override

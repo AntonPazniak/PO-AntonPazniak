@@ -15,14 +15,14 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 
 @Getter
-public class Window {
+public class MainWindow {
 
     private JFrame frame;
     private final JMenuItem openItem, saveItem, exitItem;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private final JMenu pointMenu;
-    private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem;
+    private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
     private JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -31,7 +31,7 @@ public class Window {
     private final int height = 500;
 
 
-    public Window() {
+    public MainWindow() {
         frame = new JFrame("My GIMP");
         menuBar = new JMenuBar();
 
@@ -53,6 +53,7 @@ public class Window {
         sumItem = new JMenuItem("Sum");
         differenceItem = new JMenuItem("Difference");
         productItem = new JMenuItem("Product");
+        saturationItem = new JMenuItem("Saturation");
 
         pointMenu.add(desaturationItem);
         pointMenu.add(negativeItem);
@@ -61,6 +62,7 @@ public class Window {
         pointMenu.add(sumItem);
         pointMenu.add(differenceItem);
         pointMenu.add(productItem);
+        pointMenu.add(saturationItem);
 
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
@@ -107,14 +109,14 @@ public class Window {
         contrastItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Contrast.convert(portableAnymap, Window.this);
+                Contrast.convert(portableAnymap, MainWindow.this);
                 resizeImage();
             }
         });
         brightnessItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Brightness.convert(portableAnymap, Window.this);
+                Brightness.convert(portableAnymap, MainWindow.this);
                 resizeImage();
             }
         });
@@ -136,6 +138,13 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SDP.convert(2, portableAnymap);
+                resizeImage();
+            }
+        });
+        saturationItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Saturation.convert(portableAnymap, MainWindow.this);
                 resizeImage();
             }
         });

@@ -1,7 +1,6 @@
 package org.example.point_operation;
 
 import org.example.models.PortableAnymap;
-import org.example.pars.CreateImageFromMatrix;
 
 public class Desaturation {
 
@@ -18,6 +17,6 @@ public class Desaturation {
                 portableAnymap.getMatrix()[i][j][2] = portableAnymap.getMatrix()[i][j][0];
             }
         }
-        portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(portableAnymap.getMatrix()));
+        portableAnymap.updateImage();
     }
 }

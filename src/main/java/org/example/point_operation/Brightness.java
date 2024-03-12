@@ -2,16 +2,16 @@ package org.example.point_operation;
 
 import org.example.models.PortableAnymap;
 import org.example.pars.CreateImageFromMatrix;
-import org.example.window.Slider;
-import org.example.window.Window;
+import org.example.window.MainWindow;
+import org.example.window.SliderWindow;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Brightness {
 
-    public static void convert(PortableAnymap portableAnymap, Window window) {
-        Slider slider = new Slider("Brightness", 100, -100, 0);
+    public static void convert(PortableAnymap portableAnymap, MainWindow window) {
+        SliderWindow slider = new SliderWindow("Brightness", 100, -100, 0);
         slider.getApplyButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,11 +40,7 @@ public class Brightness {
             for (int j = 0; j < imageMatrix[i].length; j++) {
                 for (int k = 0; k < imageMatrix[i][j].length; k++) {
                     int color = imageMatrix[i][j][k];
-                    color = (int) (color + color * factor);
-                    if (color > 250)
-                        color = 250;
-                    else if (color < 0)
-                        color = 0;
+                    color = Math.min(Math.max((int) (color + color * factor), 0), 255);
                     imageMatrix[i][j][k] = color;
                 }
             }

@@ -1,9 +1,10 @@
 package org.example;
-import org.example.window.Window;
+
+import org.example.window.MainWindow;
 
 public class Main {
     public static void main(String[] args) {
-        Window window = new Window();
+        MainWindow window = new MainWindow();
         window.start();
     }
 }
