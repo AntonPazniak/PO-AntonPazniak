@@ -63,15 +63,11 @@ public class SDP {
 
     private static void product(PortableAnymap portableAnymap, PortableAnymap portableAnymap1) {
         int[][][] matrix = portableAnymap.getMatrix();
-
-
         for (int i = 0; i < portableAnymap.getHeight(); i++) {
             for (int j = 0; j < portableAnymap.getWidth(); j++) {
-
                 if (i < portableAnymap1.getHeight() && j < portableAnymap1.getWidth()) {
                     for (int l = 0; l < 3; l++) {
                         int pixel = portableAnymap.getMatrix()[i][j][l] * (portableAnymap1.getMatrix()[i][j][l] / 255);
-
                         matrix[i][j][l] = pixel;
                     }
                 }

@@ -2,6 +2,7 @@ package org.example.window;
 
 
 import lombok.Getter;
+import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
 import org.example.point_operation.*;
@@ -23,6 +24,8 @@ public class MainWindow {
     private JMenu fileMenu;
     private final JMenu pointMenu;
     private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
+    private final JMenu histogramMenu;
+    private final JMenuItem createHistogramItem;
     private JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -64,6 +67,13 @@ public class MainWindow {
         pointMenu.add(productItem);
         pointMenu.add(saturationItem);
 
+        histogramMenu = new JMenu("Histogram");
+
+        createHistogramItem = new JMenuItem("create");
+
+        histogramMenu.add(createHistogramItem);
+
+
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.addSeparator();
@@ -71,7 +81,7 @@ public class MainWindow {
 
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
-
+        menuBar.add(histogramMenu);
         frame.setJMenuBar(menuBar);
 
         frame.setSize(width, height);
@@ -146,6 +156,13 @@ public class MainWindow {
             public void actionPerformed(ActionEvent e) {
                 Saturation.convert(portableAnymap, MainWindow.this);
                 resizeImage();
+            }
+        });
+
+        createHistogramItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Histogram.creatHistogram(portableAnymap);
             }
         });
 
