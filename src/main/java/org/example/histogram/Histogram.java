@@ -1,6 +1,7 @@
 package org.example.histogram;
 
 import org.example.models.PortableAnymap;
+import org.example.point_operation.Desaturation;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,8 +13,32 @@ import java.awt.*;
 
 public class Histogram extends JFrame {
 
-    public Histogram(String title, PortableAnymap image) {
+    public Histogram(String title) {
         super(title);
+
+    }
+
+    public static void creatRGBHistogram(PortableAnymap image) {
+        SwingUtilities.invokeLater(() -> {
+            Histogram histogram = new Histogram("Histogram");
+            histogram.RGBHistogram(image);
+            histogram.pack();
+            histogram.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            histogram.setVisible(true);
+        });
+    }
+
+    public static void creatGrayHistogram(PortableAnymap image) {
+        SwingUtilities.invokeLater(() -> {
+            Histogram histogram = new Histogram("Histogram");
+            histogram.GrayHistogram(image);
+            histogram.pack();
+            histogram.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            histogram.setVisible(true);
+        });
+    }
+
+    public void RGBHistogram(PortableAnymap image) {
 
         HistogramDataset dataset = new HistogramDataset();
 
@@ -32,8 +57,8 @@ public class Histogram extends JFrame {
 
 
         dataset.addSeries("Red", redData, 256);
-        dataset.addSeries("Green", greenData, 256);
         dataset.addSeries("Blue", blueData, 256);
+        dataset.addSeries("Green", greenData, 256);
 
         JFreeChart chart = ChartFactory.createHistogram(
                 "Histogram of Image",
@@ -42,7 +67,6 @@ public class Histogram extends JFrame {
                 dataset
         );
 
-        // Изменение внешнего вида графика
         XYSplineRenderer renderer = new XYSplineRenderer();
         for (int i = 0; i < dataset.getSeriesCount(); i++) {
             renderer.setSeriesShapesVisible(i, false);
@@ -55,13 +79,43 @@ public class Histogram extends JFrame {
         setContentPane(chartPanel);
     }
 
+    public void GrayHistogram(PortableAnymap image) {
 
-    public static void creatHistogram(PortableAnymap image) {
-        SwingUtilities.invokeLater(() -> {
-            Histogram histogram = new Histogram("Histogram", image);
-            histogram.pack();
-            histogram.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            histogram.setVisible(true);
-        });
+        int[][][] matrix = image.copyMatrix();
+
+        Desaturation.convertP3(matrix);
+
+        HistogramDataset dataset = new HistogramDataset();
+
+        double[] grayData = new double[image.getWidth() * image.getHeight()];
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int index = y * image.getWidth() + x;
+                grayData[index] = matrix[y][x][0];
+                ;
+            }
+        }
+
+
+        dataset.addSeries("Gray", grayData, 256);
+
+        JFreeChart chart = ChartFactory.createHistogram(
+                "Histogram of Image",
+                "Pixel Value",
+                "Frequency",
+                dataset
+        );
+
+        XYSplineRenderer renderer = new XYSplineRenderer();
+        for (int i = 0; i < dataset.getSeriesCount(); i++) {
+            renderer.setSeriesShapesVisible(i, false);
+        }
+        chart.getXYPlot().setRenderer(renderer);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(300, 200));
+
+        setContentPane(chartPanel);
     }
 }

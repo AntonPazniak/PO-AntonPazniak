@@ -25,7 +25,7 @@ public class MainWindow {
     private final JMenu pointMenu;
     private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
     private final JMenu histogramMenu;
-    private final JMenuItem createHistogramItem;
+    private final JMenuItem RGBHistogramItem, grayHistogramItem;
     private JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -69,9 +69,11 @@ public class MainWindow {
 
         histogramMenu = new JMenu("Histogram");
 
-        createHistogramItem = new JMenuItem("create");
+        RGBHistogramItem = new JMenuItem("RGB");
+        grayHistogramItem = new JMenuItem("Gray");
 
-        histogramMenu.add(createHistogramItem);
+        histogramMenu.add(RGBHistogramItem);
+        histogramMenu.add(grayHistogramItem);
 
 
         fileMenu.add(openItem);
@@ -159,10 +161,16 @@ public class MainWindow {
             }
         });
 
-        createHistogramItem.addActionListener(new ActionListener() {
+        RGBHistogramItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Histogram.creatHistogram(portableAnymap);
+                Histogram.creatRGBHistogram(portableAnymap);
+            }
+        });
+        grayHistogramItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Histogram.creatGrayHistogram(portableAnymap);
             }
         });
 
