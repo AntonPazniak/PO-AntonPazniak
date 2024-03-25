@@ -20,7 +20,7 @@ public class Histogram extends JFrame {
 
     public static void creatRGBHistogram(PortableAnymap image) {
         SwingUtilities.invokeLater(() -> {
-            Histogram histogram = new Histogram("Histogram");
+            Histogram histogram = new Histogram("Histogram RGB");
             histogram.RGBHistogram(image);
             histogram.pack();
             histogram.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -30,7 +30,7 @@ public class Histogram extends JFrame {
 
     public static void creatGrayHistogram(PortableAnymap image) {
         SwingUtilities.invokeLater(() -> {
-            Histogram histogram = new Histogram("Histogram");
+            Histogram histogram = new Histogram("Histogram Gray");
             histogram.GrayHistogram(image);
             histogram.pack();
             histogram.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
