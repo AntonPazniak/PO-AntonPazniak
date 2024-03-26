@@ -2,6 +2,7 @@ package org.example.window;
 
 
 import lombok.Getter;
+import org.example.filters.Splot;
 import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
@@ -27,7 +28,7 @@ public class MainWindow {
     private final JMenu histogramMenu;
     private final JMenuItem RGBHistogramItem, grayHistogramItem;
     private final JMenu splotMenu;
-    private final JMenuItem testItem;
+    private final JMenuItem testItem, sobelItem, previtItem, robertsItem, laplaceItem, loGItem;
     private JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -81,7 +82,18 @@ public class MainWindow {
         splotMenu = new JMenu("Splot");
         testItem = new JMenuItem("test");
 
+        sobelItem = new JMenuItem("Sobel");
+        previtItem = new JMenuItem("Previt");
+        robertsItem = new JMenuItem("Roberts");
+        laplaceItem = new JMenuItem("Laplace");
+        loGItem = new JMenuItem("LoG");
+
         splotMenu.add(testItem);
+        splotMenu.add(sobelItem);
+        splotMenu.add(previtItem);
+        splotMenu.add(robertsItem);
+        splotMenu.add(laplaceItem);
+        splotMenu.add(loGItem);
 
 
         fileMenu.add(openItem);
@@ -186,6 +198,46 @@ public class MainWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SplotWindow.test(portableAnymap, MainWindow.this);
+            }
+        });
+        sobelItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Splot.sobel(portableAnymap.getMatrix());
+                portableAnymap.updateImage();
+                resizeImage();
+            }
+        });
+        previtItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Splot.previt(portableAnymap.getMatrix());
+                portableAnymap.updateImage();
+                resizeImage();
+            }
+        });
+        robertsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Splot.roberts(portableAnymap.getMatrix());
+                portableAnymap.updateImage();
+                resizeImage();
+            }
+        });
+        laplaceItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Splot.laplace(portableAnymap.getMatrix());
+                portableAnymap.updateImage();
+                resizeImage();
+            }
+        });
+        loGItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Splot.loG(portableAnymap.getMatrix());
+                portableAnymap.updateImage();
+                resizeImage();
             }
         });
 
