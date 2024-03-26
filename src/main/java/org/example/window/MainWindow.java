@@ -26,6 +26,8 @@ public class MainWindow {
     private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
     private final JMenu histogramMenu;
     private final JMenuItem RGBHistogramItem, grayHistogramItem;
+    private final JMenu splotMenu;
+    private final JMenuItem testItem;
     private JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -76,6 +78,12 @@ public class MainWindow {
         histogramMenu.add(grayHistogramItem);
 
 
+        splotMenu = new JMenu("Splot");
+        testItem = new JMenuItem("test");
+
+        splotMenu.add(testItem);
+
+
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.addSeparator();
@@ -84,6 +92,7 @@ public class MainWindow {
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
+        menuBar.add(splotMenu);
         frame.setJMenuBar(menuBar);
 
         frame.setSize(width, height);
@@ -171,6 +180,12 @@ public class MainWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Histogram.creatGrayHistogram(portableAnymap);
+            }
+        });
+        testItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SplotWindow.test(portableAnymap, MainWindow.this);
             }
         });
 

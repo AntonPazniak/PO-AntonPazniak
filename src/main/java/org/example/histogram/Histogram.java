@@ -5,7 +5,6 @@ import org.example.point_operation.Desaturation;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.statistics.HistogramDataset;
 
 import javax.swing.*;
@@ -67,11 +66,11 @@ public class Histogram extends JFrame {
                 dataset
         );
 
-        XYSplineRenderer renderer = new XYSplineRenderer();
-        for (int i = 0; i < dataset.getSeriesCount(); i++) {
-            renderer.setSeriesShapesVisible(i, false);
-        }
-        chart.getXYPlot().setRenderer(renderer);
+//        XYSplineRenderer renderer = new XYSplineRenderer();
+//        for (int i = 0; i < dataset.getSeriesCount(); i++) {
+//            renderer.setSeriesShapesVisible(i, false);
+//        }
+//        chart.getXYPlot().setRenderer(renderer);
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(300, 200));
@@ -107,11 +106,11 @@ public class Histogram extends JFrame {
                 dataset
         );
 
-        XYSplineRenderer renderer = new XYSplineRenderer();
-        for (int i = 0; i < dataset.getSeriesCount(); i++) {
-            renderer.setSeriesShapesVisible(i, false);
-        }
-        chart.getXYPlot().setRenderer(renderer);
+//        XYSplineRenderer renderer = new XYSplineRenderer();
+//        for (int i = 0; i < dataset.getSeriesCount(); i++) {
+//            renderer.setSeriesShapesVisible(i, false);
+//        }
+//        chart.getXYPlot().setRenderer(renderer);
 
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(300, 200));

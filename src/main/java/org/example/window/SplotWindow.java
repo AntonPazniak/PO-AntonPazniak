@@ -1,5 +1,8 @@
 package org.example.window;
 
+import org.example.filters.Splot;
+import org.example.models.PortableAnymap;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,9 +14,11 @@ public class SplotWindow extends JFrame {
 
     private final List<JPanel> jPanels = new ArrayList<>();
     private JTextField[][] jTextFields;
+    private PortableAnymap image;
 
-    public SplotWindow(String title) {
+    public SplotWindow(String title, PortableAnymap image, MainWindow window) {
         super(title);
+        this.image = image;
 
         SpinnerModel spinnerModel = new SpinnerNumberModel(1, 1, 100, 1);
         JSpinner spinner = new JSpinner(spinnerModel);
@@ -80,12 +85,9 @@ public class SplotWindow extends JFrame {
                         }
                     }
                 }
-                for (float[] i : matrix) {
-                    for (float j : i) {
-                        System.out.print(j + " ");
-                    }
-                    System.out.println();
-                }
+                Splot.test(matrix, image.getMatrix());
+                image.updateImage();
+                window.resizeImage();
             }
         });
 
@@ -95,8 +97,8 @@ public class SplotWindow extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new SplotWindow("SplotWindow Demo"));
+    public static void test(PortableAnymap image, MainWindow mainWindow) {
+        SwingUtilities.invokeLater(() -> new SplotWindow("SplotWindow Demo", image, mainWindow));
     }
 
 }
