@@ -34,23 +34,27 @@ public class Splot {
     };
 
     public static void sobel(int[][][] matrix) {
-        sumMatrix(test(sobel, matrix), test(transpose(sobel), matrix), matrix);
+        starSplot(sobel, matrix);
     }
 
     public static void roberts(int[][][] matrix) {
-        sumMatrix(test(roberts, matrix), test(transpose(roberts), matrix), matrix);
+        starSplot(roberts, matrix);
     }
 
     public static void laplace(int[][][] matrix) {
-        sumMatrix(test(laplace, matrix), test(transpose(laplace), matrix), matrix);
+        starSplot(laplace, matrix);
     }
 
     public static void loG(int[][][] matrix) {
-        sumMatrix(test(LoG, matrix), test(transpose(LoG), matrix), matrix);
+        starSplot(LoG, matrix);
     }
 
     public static void previt(int[][][] matrix) {
-        sumMatrix(test(previt, matrix), test(transpose(previt), matrix), matrix);
+        starSplot(previt, matrix);
+    }
+
+    public static void starSplot(float[][] splotMatrix, int[][][] imageMatrix) {
+        sumMatrix(test(splotMatrix, imageMatrix), test(transpose(splotMatrix), imageMatrix), imageMatrix);
     }
 
     public static int[][][] test(float[][] splotMatrix, int[][][] imageMatrix) {

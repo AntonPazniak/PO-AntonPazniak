@@ -260,6 +260,7 @@ public class MainWindow {
     private void openFile() {
         openItem.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/images"));
 
             int result = fileChooser.showOpenDialog(null);
 
@@ -268,12 +269,12 @@ public class MainWindow {
                 int dotIndex = openFile.getName().lastIndexOf('.');
                 if (dotIndex > 0) {
                     String fileExtension = openFile.getName().substring(dotIndex + 1);
-                    if(!fileExtension.equals("png") && !fileExtension.equals("jpg") && !fileExtension.equals("JPG")){
+                    if (!fileExtension.equals("png") && !fileExtension.equals("jpg") && !fileExtension.equals("JPG")) {
                         portableAnymap = Convert.open(openFile.getAbsolutePath());
                         portableAnymap.setImageLabel(imageLabel);
                         originalIcon = new ImageIcon(portableAnymap.getImage());
                         resizeImage();
-                    }else {
+                    } else {
                         originalIcon = new ImageIcon(openFile.getAbsolutePath());
                         resizeImage();
                     }
@@ -281,7 +282,6 @@ public class MainWindow {
             }
         });
     }
-
 
     public void resizeImage() {
         if (portableAnymap != null) {
