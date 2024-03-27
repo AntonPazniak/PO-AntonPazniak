@@ -260,7 +260,7 @@ public class MainWindow {
     private void openFile() {
         openItem.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/images"));
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir") + "/src/main/resources/images/P3"));
 
             int result = fileChooser.showOpenDialog(null);
 
@@ -273,6 +273,7 @@ public class MainWindow {
                         portableAnymap = Convert.open(openFile.getAbsolutePath());
                         portableAnymap.setImageLabel(imageLabel);
                         originalIcon = new ImageIcon(portableAnymap.getImage());
+                        portableAnymap.setOriginalIcon(originalIcon);
                         resizeImage();
                     } else {
                         originalIcon = new ImageIcon(openFile.getAbsolutePath());

@@ -20,16 +20,16 @@ public class SplotWindow extends JFrame {
         super(title);
         this.image = image;
 
-        SpinnerModel spinnerModel = new SpinnerNumberModel(1, 1, 100, 1);
+        SpinnerModel spinnerModel = new SpinnerNumberModel(1, 1, 100, 2);
         JSpinner spinner = new JSpinner(spinnerModel);
         JButton setButton = new JButton("Set");
         JPanel panel = new JPanel();
         panel.add(spinner);
         panel.add(setButton);
-        add(panel, BorderLayout.NORTH); // Add panel to the top of the frame
+        add(panel, BorderLayout.NORTH);
 
 
-        JPanel mainPanel = new JPanel(new GridLayout(0, 1)); // Panel to contain dynamically added panels
+        JPanel mainPanel = new JPanel(new GridLayout(0, 1));
 
         setButton.addActionListener(new ActionListener() {
             @Override
@@ -43,13 +43,13 @@ public class SplotWindow extends JFrame {
 
                 jTextFields = new JTextField[value][value];
 
-                mainPanel.removeAll(); // Clear previous components
-                mainPanel.setLayout(new GridLayout(value, value)); // Set layout for grid of components
+                mainPanel.removeAll();
+                mainPanel.setLayout(new GridLayout(value, value));
                 for (int i = 0; i < value; i++) {
                     JPanel panel1 = new JPanel();
                     for (int j = 0; j < value; j++) {
                         JTextField textField = new JTextField(2);
-                        textField.setText(String.valueOf(1));
+                        textField.setText(String.valueOf(0));
                         panel1.add(textField);
                         jTextFields[i][j] = textField;
                     }
@@ -65,10 +65,10 @@ public class SplotWindow extends JFrame {
         Button button = new Button("Filter");
         panel1.add(button, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Panel to contain the button
-        Button filterButton = new Button("Filter"); // Button to be added
-        bottomPanel.add(filterButton); // Add button to the bottom panel
-        add(bottomPanel, BorderLayout.SOUTH); // Add bottom panel to the bottom of the frame
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        Button filterButton = new Button("Filter");
+        bottomPanel.add(filterButton);
+        add(bottomPanel, BorderLayout.SOUTH);
 
 
         filterButton.addActionListener(new ActionListener() {
@@ -85,7 +85,7 @@ public class SplotWindow extends JFrame {
                         }
                     }
                 }
-                Splot.test(matrix, image.getMatrix());
+                image.setMatrix(Splot.test(matrix, image.getMatrix()));
                 image.updateImage();
                 window.resizeImage();
             }

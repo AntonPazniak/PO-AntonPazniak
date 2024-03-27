@@ -26,9 +26,11 @@ public class PortableAnymap {
     private File file;
     private String content;
     private JLabel imageLabel;
+    private ImageIcon originalIcon;
 
     public void updateImage() {
         image = CreateImageFromMatrix.createImageFromRGBMatrix(matrix);
+        originalIcon.setImage(image);
     }
 
     public int[][][] copyMatrix() {
@@ -42,4 +44,6 @@ public class PortableAnymap {
         }
         return copy;
     }
+
+
 }
