@@ -34,28 +34,29 @@ public class Splot {
     };
 
     public static void sobel(int[][][] matrix) {
-        test(sobel, matrix);
+        sumMatrix(test(sobel, matrix), test(transpose(sobel), matrix), matrix);
     }
 
     public static void roberts(int[][][] matrix) {
-        test(roberts, matrix);
+        sumMatrix(test(roberts, matrix), test(transpose(roberts), matrix), matrix);
     }
 
     public static void laplace(int[][][] matrix) {
-        test(laplace, matrix);
+        sumMatrix(test(laplace, matrix), test(transpose(laplace), matrix), matrix);
     }
 
     public static void loG(int[][][] matrix) {
-        test(LoG, matrix);
+        sumMatrix(test(LoG, matrix), test(transpose(LoG), matrix), matrix);
     }
 
     public static void previt(int[][][] matrix) {
-        test(previt, matrix);
+        sumMatrix(test(previt, matrix), test(transpose(previt), matrix), matrix);
     }
 
-    public static void test(float[][] splotMatrix, int[][][] imageMatrix) {
+    public static int[][][] test(float[][] splotMatrix, int[][][] imageMatrix) {
         int startPos = splotMatrix.length / 2;
         int sizeSplot = splotMatrix.length * splotMatrix[0].length;
+        int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
         for (int x = startPos; x < expandMatrix.length - 1 - startPos; x++) {
             for (int y = startPos; y < expandMatrix[0].length - 1 - startPos; y++) {
@@ -73,10 +74,10 @@ public class Splot {
                 color[0] = (int) Math.min(255, Math.max(0, read / 2));
                 color[1] = (int) Math.min(255, Math.max(0, green / 2));
                 color[2] = (int) Math.min(255, Math.max(0, blue / 2));
-                imageMatrix[x - startPos][y - startPos] = color;
+                newMatrix[x - startPos][y - startPos] = color;
             }
         }
-
+        return newMatrix;
     }
 
     private static int[][][] expandMatrix(int[][][] matrix, int sizeIncrease) {
@@ -104,6 +105,33 @@ public class Splot {
                 System.out.print(")");
             }
             System.out.println();
+        }
+    }
+
+    public static float[][] transpose(float[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        float[][] transposedMatrix = new float[cols][rows];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposedMatrix[j][i] = matrix[i][j];
+            }
+        }
+
+        return transposedMatrix;
+    }
+
+    private static void sumMatrix(int[][][] xMatrix, int[][][] yMatrix, int[][][] imageMatrix) {
+        for (int i = 0; i < xMatrix.length; i++) {
+            for (int j = 0; j < xMatrix[0].length; j++) {
+                imageMatrix[i][j] = new int[]{
+                        Math.min(255, Math.max(0, xMatrix[i][j][0] + yMatrix[i][j][0])),
+                        Math.min(255, Math.max(0, xMatrix[i][j][0] + yMatrix[i][j][1])),
+                        Math.min(255, Math.max(0, xMatrix[i][j][0] + yMatrix[i][j][2]))
+                };
+            }
         }
     }
 
