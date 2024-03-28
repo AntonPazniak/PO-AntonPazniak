@@ -48,7 +48,7 @@ public class SplotWindow extends JFrame {
                 for (int i = 0; i < value; i++) {
                     JPanel panel1 = new JPanel();
                     for (int j = 0; j < value; j++) {
-                        JTextField textField = new JTextField(2);
+                        JTextField textField = new JTextField(4);
                         textField.setText(String.valueOf(0));
                         panel1.add(textField);
                         jTextFields[i][j] = textField;
