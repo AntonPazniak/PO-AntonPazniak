@@ -235,9 +235,7 @@ public class MainWindow {
         loGItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Splot.testGauss(portableAnymap.getMatrix());
-                portableAnymap.updateImage();
-                System.out.println("hi");
+                Splot.loG(portableAnymap.getMatrix());
             }
         });
 

@@ -41,16 +41,6 @@ public class Splot {
             {1, 4, 7, 4, 1}
     };
 
-    public static void testGauss(int[][][] matrix){
-        for(int i = 0; i< gauss.length;i++){
-            for(int j = 0; j < gauss[i].length;j++){
-                gauss[i][j] = gauss[i][j] /273;
-            }
-        }
-        matrix = test(gauss,matrix);
-    }
-
-
     public static void sobel(int[][][] matrix) {
         starSplot(sobel, matrix);
     }
