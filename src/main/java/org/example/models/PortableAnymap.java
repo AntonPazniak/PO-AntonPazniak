@@ -1,18 +1,15 @@
 package org.example.models;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.pars.CreateImageFromMatrix;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
 @Getter
 @Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PortableAnymap {
@@ -25,12 +22,9 @@ public class PortableAnymap {
     private String head;
     private File file;
     private String content;
-    private JLabel imageLabel;
-    private ImageIcon originalIcon;
 
     public void updateImage() {
         image = CreateImageFromMatrix.createImageFromRGBMatrix(matrix);
-        originalIcon.setImage(image);
     }
 
     public int[][][] copyMatrix() {
@@ -44,6 +38,4 @@ public class PortableAnymap {
         }
         return copy;
     }
-
-
 }

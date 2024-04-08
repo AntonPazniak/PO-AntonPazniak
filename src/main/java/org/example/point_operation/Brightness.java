@@ -29,7 +29,7 @@ public class Brightness {
                 increaseContrast(portableAnymap.getMatrix(), luminosity);
                 portableAnymap.updateImage();
                 window.resizeImage();
-                slider.getFrame().dispose();
+                slider.dispose();
             }
         });
 

@@ -10,39 +10,39 @@ import org.example.point_operation.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 
 @Getter
-public class MainWindow {
+public class MainWindow extends JFrame {
 
-    private JFrame frame;
     private final JMenuItem openItem, saveItem, exitItem;
-    private JMenuBar menuBar;
-    private JMenu fileMenu;
+    private final JMenuBar menuBar;
+    private final JMenu fileMenu;
     private final JMenu pointMenu;
     private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
     private final JMenu histogramMenu;
-    private final JMenuItem RGBHistogramItem, grayHistogramItem;
+    private final JMenuItem RGBHistogramItem, grayHistogramItem, stretchingHistogramItem, equalizationItem;
     private final JMenu splotMenu;
     private final JMenuItem testItem, sobelItem, previtItem, robertsItem, laplaceItem, loGItem;
-    private JLabel imageLabel;
+    private final JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
     private PortableAnymap portableAnymap;
     private final int width = 720;
     private final int height = 500;
 
-
     public MainWindow() {
-        frame = new JFrame("My GIMP");
+        super("My GIMP");
         menuBar = new JMenuBar();
 
+        super.paintComponents(this.getGraphics());
+
+        setJMenuBar(menuBar);
         imageLabel = new JLabel();
-        frame.getContentPane().add(imageLabel, BorderLayout.CENTER);
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(imageLabel, BorderLayout.CENTER);
 
         fileMenu = new JMenu("File");
 
@@ -74,9 +74,15 @@ public class MainWindow {
 
         RGBHistogramItem = new JMenuItem("RGB");
         grayHistogramItem = new JMenuItem("Gray");
+        stretchingHistogramItem = new JMenuItem("Stretching");
+        equalizationItem = new JMenuItem("Equalization");
+
 
         histogramMenu.add(RGBHistogramItem);
         histogramMenu.add(grayHistogramItem);
+        histogramMenu.add(stretchingHistogramItem);
+        histogramMenu.add(equalizationItem);
+
 
 
         splotMenu = new JMenu("Splot");
@@ -105,154 +111,114 @@ public class MainWindow {
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
         menuBar.add(splotMenu);
-        frame.setJMenuBar(menuBar);
+        setJMenuBar(menuBar);
 
-        frame.setSize(width, height);
+        setSize(width, height);
 
+    }
+
+    @Override
+    public MenuBar getMenuBar() {
+        return super.getMenuBar();
     }
 
     public void start(){
 
-        frame.addComponentListener(new ComponentAdapter() {
+        addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 resizeImage();
             }
         });
 
-        saveItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                chooseSaveFolder();
-            }
-        });
-        desaturationItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Desaturation.convert(portableAnymap);
-                resizeImage();
-            }
-        });
-        negativeItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Negative.convert(portableAnymap);
-                resizeImage();
-            }
-        });
-        contrastItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Contrast.convert(portableAnymap, MainWindow.this);
-                resizeImage();
-            }
-        });
-        brightnessItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Brightness.convert(portableAnymap, MainWindow.this);
-                resizeImage();
-            }
-        });
-        sumItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SDP.convert(0, portableAnymap);
-                resizeImage();
-            }
-        });
-        differenceItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SDP.convert(1, portableAnymap);
-                resizeImage();
-            }
-        });
-        productItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SDP.convert(2, portableAnymap);
-                resizeImage();
-            }
-        });
-        saturationItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Saturation.convert(portableAnymap, MainWindow.this);
-                resizeImage();
-            }
+        saveItem.addActionListener(e -> chooseSaveFolder());
+        desaturationItem.addActionListener(e -> {
+            Desaturation.convert(portableAnymap);
+            resizeImage();
         });
 
-        RGBHistogramItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Histogram.creatRGBHistogram(portableAnymap);
-            }
-        });
-        grayHistogramItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Histogram.creatGrayHistogram(portableAnymap);
-            }
-        });
-        testItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SplotWindow.test(portableAnymap, MainWindow.this);
-            }
-        });
-        sobelItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Splot.sobel(portableAnymap.getMatrix());
-                portableAnymap.updateImage();
-                resizeImage();
-            }
-        });
-        previtItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Splot.previt(portableAnymap.getMatrix());
-                portableAnymap.updateImage();
-                resizeImage();
-            }
-        });
-        robertsItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Splot.roberts(portableAnymap.getMatrix());
-                portableAnymap.updateImage();
-                resizeImage();
-            }
-        });
-        laplaceItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Splot.laplace(portableAnymap.getMatrix());
-                portableAnymap.updateImage();
-                resizeImage();
-            }
-        });
-        loGItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Splot.loG(portableAnymap.getMatrix());
-            }
+        negativeItem.addActionListener(e -> {
+            Negative.convert(portableAnymap);
+            resizeImage();
         });
 
+        contrastItem.addActionListener(e -> {
+            Contrast.convert(portableAnymap, MainWindow.this);
+            resizeImage();
+        });
+
+        brightnessItem.addActionListener(e -> {
+            Brightness.convert(portableAnymap, MainWindow.this);
+            resizeImage();
+        });
+
+        sumItem.addActionListener(e -> {
+            SDP.convert(0, portableAnymap);
+            resizeImage();
+        });
+
+        differenceItem.addActionListener(e -> {
+            SDP.convert(1, portableAnymap);
+            resizeImage();
+        });
+
+        productItem.addActionListener(e -> {
+            SDP.convert(2, portableAnymap);
+            resizeImage();
+        });
+
+        saturationItem.addActionListener(e -> {
+            Saturation.convert(portableAnymap, MainWindow.this);
+            resizeImage();
+        });
+
+        RGBHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramRGB(portableAnymap));
+
+        grayHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramGray(portableAnymap));
+
+        stretchingHistogramItem.addActionListener(e -> {
+            Histogram.stretching(portableAnymap);
+            resizeImage();
+        });
+
+        equalizationItem.addActionListener(e -> {
+            Histogram.equalization(portableAnymap);
+            resizeImage();
+        });
+
+        testItem.addActionListener(e -> SplotWindow.test(portableAnymap, MainWindow.this));
+
+        sobelItem.addActionListener(e -> {
+            Splot.sobel(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        previtItem.addActionListener(e -> {
+            Splot.previt(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        robertsItem.addActionListener(e -> {
+            Splot.roberts(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        laplaceItem.addActionListener(e -> {
+            Splot.laplace(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        loGItem.addActionListener(e -> Splot.loG(portableAnymap.getMatrix()));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        exitItem.addActionListener(e -> System.exit(0));
+
+        resizeImage();
         openFile();
-        exit();
-        frame.setVisible(true);
-    }
-
-    private void exit(){
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        setVisible(true);
     }
 
     private void openFile() {
@@ -269,9 +235,7 @@ public class MainWindow {
                     String fileExtension = openFile.getName().substring(dotIndex + 1);
                     if (!fileExtension.equals("png") && !fileExtension.equals("jpg") && !fileExtension.equals("JPG")) {
                         portableAnymap = Convert.open(openFile.getAbsolutePath());
-                        portableAnymap.setImageLabel(imageLabel);
                         originalIcon = new ImageIcon(portableAnymap.getImage());
-                        portableAnymap.setOriginalIcon(originalIcon);
                         resizeImage();
                     } else {
                         originalIcon = new ImageIcon(openFile.getAbsolutePath());

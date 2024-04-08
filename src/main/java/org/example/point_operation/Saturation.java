@@ -31,7 +31,7 @@ public class Saturation {
                         getFactor(slider.getSlider().getValue()));
                 portableAnymap.updateImage();
                 window.resizeImage();
-                slider.getFrame().dispose();
+                slider.dispose();
             }
         });
 
