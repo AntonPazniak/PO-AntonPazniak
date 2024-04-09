@@ -304,7 +304,11 @@ public final class MainWindow extends JFrame {
             resizeImage();
         });
 
-        loGItem.addActionListener(e -> Splot.loG(portableAnymap.getMatrix()));
+        loGItem.addActionListener(e -> {
+            Splot.loG(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         exitItem.addActionListener(e -> System.exit(0));
