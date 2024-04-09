@@ -8,10 +8,10 @@ import org.example.window.SliderWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Saturation {
+public class Saturation implements PointFilter {
 
-
-    public static void convert(PortableAnymap portableAnymap, MainWindow window) {
+    @Override
+    public void convert(PortableAnymap portableAnymap) {
         SliderWindow slider = new SliderWindow("Saturation", 100, -100, 0);
         slider.getApplyButton().addActionListener(new ActionListener() {
             @Override
@@ -20,7 +20,7 @@ public class Saturation {
                 increaseSaturation(workMatrix,
                         getFactor(slider.getSlider().getValue()));
                 portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix));
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
             }
         });
         slider.getSaveButton().addActionListener(new ActionListener() {
@@ -30,14 +30,14 @@ public class Saturation {
                 increaseSaturation(portableAnymap.getMatrix(),
                         getFactor(slider.getSlider().getValue()));
                 portableAnymap.updateImage();
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
                 slider.dispose();
             }
         });
 
     }
 
-    private static float getFactor(float factor) {
+    private float getFactor(float factor) {
         if (factor > 0) {
             factor = factor / 10;
         } else {
@@ -46,7 +46,7 @@ public class Saturation {
         return factor;
     }
 
-    private static void increaseSaturation(int[][][] image, double saturationFactor) {
+    private void increaseSaturation(int[][][] image, double saturationFactor) {
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[i].length; j++) {
                 int red = image[i][j][0];

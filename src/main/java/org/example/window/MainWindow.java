@@ -15,8 +15,10 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 
 @Getter
-public class MainWindow extends JFrame {
+public final class MainWindow extends JFrame {
 
+    @Getter
+    private static MainWindow mainWindow;
     private final JMenuItem openItem, saveItem, exitItem;
     private final JMenuBar menuBar;
     private final JMenu fileMenu;
@@ -25,7 +27,7 @@ public class MainWindow extends JFrame {
     private final JMenu histogramMenu;
     private final JMenuItem RGBHistogramItem, grayHistogramItem, stretchingHistogramItem, equalizationItem;
     private final JMenu splotMenu;
-    private final JMenuItem testItem, sobelItem, previtItem, robertsItem, laplaceItem, loGItem;
+    private final JMenuItem testItem, sobelItem, previtItem, robertsItem, laplaceItem, loGItem, gaussItem;
     private final JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -93,6 +95,7 @@ public class MainWindow extends JFrame {
         robertsItem = new JMenuItem("Roberts");
         laplaceItem = new JMenuItem("Laplace");
         loGItem = new JMenuItem("LoG");
+        gaussItem = new JMenuItem("Gauss");
 
         splotMenu.add(testItem);
         splotMenu.add(sobelItem);
@@ -100,6 +103,7 @@ public class MainWindow extends JFrame {
         splotMenu.add(robertsItem);
         splotMenu.add(laplaceItem);
         splotMenu.add(loGItem);
+        splotMenu.add(gaussItem);
 
 
         fileMenu.add(openItem);
@@ -122,103 +126,9 @@ public class MainWindow extends JFrame {
         return super.getMenuBar();
     }
 
-    public void start(){
-
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                resizeImage();
-            }
-        });
-
-        saveItem.addActionListener(e -> chooseSaveFolder());
-        desaturationItem.addActionListener(e -> {
-            Desaturation.convert(portableAnymap);
-            resizeImage();
-        });
-
-        negativeItem.addActionListener(e -> {
-            Negative.convert(portableAnymap);
-            resizeImage();
-        });
-
-        contrastItem.addActionListener(e -> {
-            Contrast.convert(portableAnymap, MainWindow.this);
-            resizeImage();
-        });
-
-        brightnessItem.addActionListener(e -> {
-            Brightness.convert(portableAnymap, MainWindow.this);
-            resizeImage();
-        });
-
-        sumItem.addActionListener(e -> {
-            SDP.convert(0, portableAnymap);
-            resizeImage();
-        });
-
-        differenceItem.addActionListener(e -> {
-            SDP.convert(1, portableAnymap);
-            resizeImage();
-        });
-
-        productItem.addActionListener(e -> {
-            SDP.convert(2, portableAnymap);
-            resizeImage();
-        });
-
-        saturationItem.addActionListener(e -> {
-            Saturation.convert(portableAnymap, MainWindow.this);
-            resizeImage();
-        });
-
-        RGBHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramRGB(portableAnymap));
-
-        grayHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramGray(portableAnymap));
-
-        stretchingHistogramItem.addActionListener(e -> {
-            Histogram.stretching(portableAnymap);
-            resizeImage();
-        });
-
-        equalizationItem.addActionListener(e -> {
-            Histogram.equalization(portableAnymap);
-            resizeImage();
-        });
-
-        testItem.addActionListener(e -> SplotWindow.test(portableAnymap, MainWindow.this));
-
-        sobelItem.addActionListener(e -> {
-            Splot.sobel(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
-            resizeImage();
-        });
-
-        previtItem.addActionListener(e -> {
-            Splot.previt(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
-            resizeImage();
-        });
-
-        robertsItem.addActionListener(e -> {
-            Splot.roberts(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
-            resizeImage();
-        });
-
-        laplaceItem.addActionListener(e -> {
-            Splot.laplace(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
-            resizeImage();
-        });
-
-        loGItem.addActionListener(e -> Splot.loG(portableAnymap.getMatrix()));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        exitItem.addActionListener(e -> System.exit(0));
-
-        resizeImage();
-        openFile();
-        setVisible(true);
+    public static void create() {
+        mainWindow = new MainWindow();
+        mainWindow.start();
     }
 
     private void openFile() {
@@ -294,4 +204,115 @@ public class MainWindow extends JFrame {
             System.out.println("Отменено пользователем.");
         }
     }
+
+    public void start(){
+
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                resizeImage();
+            }
+        });
+
+        saveItem.addActionListener(e -> chooseSaveFolder());
+        desaturationItem.addActionListener(e -> {
+            PointFilter pointFilter = new Desaturation();
+            pointFilter.convert(portableAnymap);
+            resizeImage();
+        });
+
+        negativeItem.addActionListener(e -> {
+            PointFilter pointFilter = new Negative();
+            pointFilter.convert(portableAnymap);
+            resizeImage();
+        });
+
+        contrastItem.addActionListener(e -> {
+            PointFilter pointFilter = new Contrast();
+            pointFilter.convert(portableAnymap);
+            resizeImage();
+        });
+
+        brightnessItem.addActionListener(e -> {
+            PointFilter pointFilter = new Brightness();
+            pointFilter.convert(portableAnymap);
+            resizeImage();
+        });
+
+        sumItem.addActionListener(e -> {
+            SDP.convert(0, portableAnymap);
+            resizeImage();
+        });
+
+        differenceItem.addActionListener(e -> {
+            SDP.convert(1, portableAnymap);
+            resizeImage();
+        });
+
+        productItem.addActionListener(e -> {
+            SDP.convert(2, portableAnymap);
+            resizeImage();
+        });
+
+        saturationItem.addActionListener(e -> {
+            PointFilter pointFilter = new Negative();
+            pointFilter.convert(portableAnymap);
+            resizeImage();
+        });
+
+        RGBHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramRGB(portableAnymap));
+
+        grayHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramGray(portableAnymap));
+
+        stretchingHistogramItem.addActionListener(e -> {
+            Histogram.stretching(portableAnymap);
+            resizeImage();
+        });
+
+        equalizationItem.addActionListener(e -> {
+            Histogram.equalization(portableAnymap);
+            resizeImage();
+        });
+
+        testItem.addActionListener(e -> SplotWindow.test(portableAnymap, MainWindow.this));
+
+        sobelItem.addActionListener(e -> {
+            Splot.sobel(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        previtItem.addActionListener(e -> {
+            Splot.previt(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        robertsItem.addActionListener(e -> {
+            Splot.roberts(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        gaussItem.addActionListener(e -> {
+            Splot.gauss(portableAnymap);
+            resizeImage();
+        });
+
+        laplaceItem.addActionListener(e -> {
+            Splot.laplace(portableAnymap.getMatrix());
+            portableAnymap.updateImage();
+            resizeImage();
+        });
+
+        loGItem.addActionListener(e -> Splot.loG(portableAnymap.getMatrix()));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        exitItem.addActionListener(e -> System.exit(0));
+
+        resizeImage();
+        openFile();
+        setVisible(true);
+    }
+
+
 }

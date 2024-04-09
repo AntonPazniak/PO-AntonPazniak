@@ -1,5 +1,7 @@
 package org.example.filters;
 
+import org.example.models.PortableAnymap;
+
 public class Splot {
 
     private static final float[][] sobel = {
@@ -61,13 +63,33 @@ public class Splot {
         starSplot(previt, matrix);
     }
 
+    public static void gauss(PortableAnymap portableAnymap) {
+        portableAnymap.setMatrix(test(createGaussianMatrix(11, 1.5f), portableAnymap.getMatrix()));
+    }
+
+    private static float gaussianFunction(float x, float y, float sigma) {
+        return (float) ((1.0 / (2.0 * Math.PI * sigma * sigma)) * Math.exp(-(x * x + y * y) / (2.0 * sigma * sigma)));
+    }
+
+    private static float[][] createGaussianMatrix(int size, float sigma) {
+        float[][] matrix = new float[size][size];
+        int halfSize = size / 2;
+
+        for (int i = -halfSize; i <= halfSize; i++) {
+            for (int j = -halfSize; j <= halfSize; j++) {
+                matrix[i + halfSize][j + halfSize] = gaussianFunction(i, j, sigma);
+            }
+        }
+
+        return matrix;
+    }
+
     public static void starSplot(float[][] splotMatrix, int[][][] imageMatrix) {
         sumMatrix(test(splotMatrix, imageMatrix), test(transpose(splotMatrix), imageMatrix), imageMatrix);
     }
 
     public static int[][][] test(float[][] splotMatrix, int[][][] imageMatrix) {
         int startPos = splotMatrix.length / 2;
-        int sizeSplot = splotMatrix.length * splotMatrix[0].length;
         int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
         for (int x = startPos; x < expandMatrix.length - 1 - startPos; x++) {
@@ -107,18 +129,6 @@ public class Splot {
         return newMatrix;
     }
 
-    private static void print(int[][][] matrix) {
-        for (int[][] i : matrix) {
-            for (int[] j : i) {
-                System.out.print("(");
-                for (int k : j) {
-                    System.out.print(k + " ");
-                }
-                System.out.print(")");
-            }
-            System.out.println();
-        }
-    }
 
     public static float[][] transpose(float[][] matrix) {
         int rows = matrix.length;

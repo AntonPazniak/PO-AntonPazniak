@@ -8,10 +8,10 @@ import org.example.window.SliderWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Contrast {
+public class Contrast implements PointFilter {
 
 
-    public static void convert(PortableAnymap portableAnymap, MainWindow window) {
+    public void convert(PortableAnymap portableAnymap) {
         SliderWindow slider = new SliderWindow("Test", 100, -100, 0);
         slider.getApplyButton().addActionListener(new ActionListener() {
             @Override
@@ -20,7 +20,7 @@ public class Contrast {
                 increaseContrast(workMatrix,
                         getFactor(slider.getSlider().getValue()));
                 portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix));
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
             }
         });
         slider.getSaveButton().addActionListener(new ActionListener() {
@@ -29,14 +29,14 @@ public class Contrast {
                 increaseContrast(portableAnymap.getMatrix(),
                         getFactor(slider.getSlider().getValue()));
                 portableAnymap.updateImage();
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
                 slider.dispose();
             }
         });
 
     }
 
-    private static float getFactor(float factor) {
+    private float getFactor(float factor) {
         if (factor > 0) {
             factor = factor / 10;
         } else {
@@ -45,7 +45,7 @@ public class Contrast {
         return factor;
     }
 
-    private static int getAverageMatrix(int[][][] matrix) {
+    private int getAverageMatrix(int[][][] matrix) {
         int average = 0;
         for (int[][] i : matrix) {
             for (int[] j : i) {
@@ -55,7 +55,7 @@ public class Contrast {
         return average / matrix.length / 3;
     }
 
-    private static int[][][] increaseContrast(int[][][] imageMatrix, double factor) {
+    private int[][][] increaseContrast(int[][][] imageMatrix, double factor) {
         for (int i = 0; i < imageMatrix.length; i++) {
             for (int j = 0; j < imageMatrix[i].length; j++) {
                 for (int k = 0; k < imageMatrix[i][j].length; k++) {

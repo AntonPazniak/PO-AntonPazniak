@@ -38,4 +38,9 @@ public class PortableAnymap {
         }
         return copy;
     }
+
+    public void setMatrix(int[][][] matrix) {
+        this.matrix = matrix;
+        updateImage();
+    }
 }

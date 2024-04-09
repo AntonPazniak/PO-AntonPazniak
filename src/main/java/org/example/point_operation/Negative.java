@@ -4,9 +4,10 @@ import org.example.models.PortableAnymap;
 import org.example.pars.CreateImageFromMatrix;
 
 
-public class Negative {
+public class Negative implements PointFilter {
 
-    public static void convert(PortableAnymap portableAnymap) {
+    @Override
+    public void convert(PortableAnymap portableAnymap) {
         for (int i = 0; i < portableAnymap.getHeight(); i++) {
             for (int j = 0; j < portableAnymap.getWidth(); j++) {
                 portableAnymap.getMatrix()[i][j] = new int[] {

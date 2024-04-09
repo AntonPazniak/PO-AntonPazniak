@@ -8,9 +8,10 @@ import org.example.window.SliderWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Brightness {
+public class Brightness implements PointFilter {
 
-    public static void convert(PortableAnymap portableAnymap, MainWindow window) {
+    @Override
+    public void convert(PortableAnymap portableAnymap) {
         SliderWindow slider = new SliderWindow("Brightness", 100, -100, 0);
         slider.getApplyButton().addActionListener(new ActionListener() {
             @Override
@@ -19,7 +20,7 @@ public class Brightness {
                 float luminosity = ((float) slider.getSlider().getValue() / 100);
                 increaseContrast(workMatrix, luminosity);
                 portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix));
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
             }
         });
         slider.getSaveButton().addActionListener(new ActionListener() {
@@ -28,14 +29,14 @@ public class Brightness {
                 float luminosity = ((float) slider.getSlider().getValue() / 100);
                 increaseContrast(portableAnymap.getMatrix(), luminosity);
                 portableAnymap.updateImage();
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
                 slider.dispose();
             }
         });
 
     }
 
-    private static void increaseContrast(int[][][] imageMatrix, double factor) {
+    private void increaseContrast(int[][][] imageMatrix, double factor) {
         for (int i = 0; i < imageMatrix.length; i++) {
             for (int j = 0; j < imageMatrix[i].length; j++) {
                 for (int k = 0; k < imageMatrix[i][j].length; k++) {
@@ -46,6 +47,4 @@ public class Brightness {
             }
         }
     }
-
-
 }

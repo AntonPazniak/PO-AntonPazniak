@@ -2,9 +2,10 @@ package org.example.point_operation;
 
 import org.example.models.PortableAnymap;
 
-public class Desaturation {
+public class Desaturation implements PointFilter {
 
-    public static void convert(PortableAnymap portableAnymap) {
+    @Override
+    public void convert(PortableAnymap portableAnymap) {
         if (portableAnymap.getHead().equals("P3")) {
             portableAnymap.setMatrix(convertP3(portableAnymap.getMatrix()));
             portableAnymap.updateImage();
