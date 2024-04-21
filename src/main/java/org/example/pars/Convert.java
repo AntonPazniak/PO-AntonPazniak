@@ -2,14 +2,12 @@ package org.example.pars;
 
 import org.example.models.PortableAnymap;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-import static org.example.pars.CreateImageFromMatrix.*;
+import static org.example.pars.CreateImageFromMatrix.createImageFromRGBMatrix;
 
-public class Convert {
+public final class Convert {
 
     public static PortableAnymap open(String s){
         try {
@@ -20,16 +18,12 @@ public class Convert {
     }
 
     public static Boolean save(PortableAnymap portableAnymap){
-        if(portableAnymap.getHead().equals("P1")){
-            return saveP1(portableAnymap);
-        } else if (portableAnymap.getHead().equals("P2")) {
-            return saveP2(portableAnymap);
-        }else if (portableAnymap.getHead().equals("P3")) {
-            return saveP3(portableAnymap);
-        }
-
-
-        return false;
+        return switch (portableAnymap.getHead()) {
+            case "P1" -> saveP1(portableAnymap);
+            case "P2" -> saveP2(portableAnymap);
+            case "P3" -> saveP3(portableAnymap);
+            default -> false;
+        };
     }
 
 
@@ -39,25 +33,68 @@ public class Convert {
     }
 
 
-    private static String convertFileToString(String ppmFilePath) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(ppmFilePath))) {
+    private static String readLine(DataInputStream dataInputStream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        char c;
+        while ((c = (char) dataInputStream.readByte()) != '\n') {
+            if (c != '\r') {
+                sb.append(c);
+            }
+        }
+        return sb.toString().trim();
+    }
+
+
+    private static String convertFileToString(String filePath) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             StringBuilder result = new StringBuilder();
-
+            int countLinesSkip = 0;
             while ((line = reader.readLine()) != null) {
-                // Удаляем строки с символом '#'
+                if (!line.isEmpty() && line.charAt(0) == '#') {
+                    countLinesSkip++;
+                }
                 line = line.replaceAll("#.*", "");
-
-                // Пропускаем пустые строки
                 if (!line.trim().isEmpty()) {
-                    // Объединяем символы в одну строку, разделяя пробелами
                     result.append(line.trim()).append(" ");
                 }
             }
+            String finaleResult = convertStringToAscii(String.valueOf(result)).trim();
+            String[] elements = finaleResult.split(" ");
+            if (elements[0].equals("P4") || elements[0].equals("P5") || elements[0].equals("P6")) {
+                countLinesSkip += 2;
+                StringBuilder sb = new StringBuilder();
+                sb.append(elements[0]).append(" ");
+                sb.append(elements[1]).append(" ").append(elements[2]).append(" ");
+                if (!elements[0].equals("P4")) {
+                    sb.append(elements[3]).append(" ");
+                    countLinesSkip++;
+                }
+                result = convertRawToString(filePath, sb, countLinesSkip);
+            }
 
+            System.out.println(result);
             return convertStringToAscii(String.valueOf(result)).trim();
         }
     }
+
+    private static StringBuilder convertRawToString(String filePath, StringBuilder result, int countToSkip) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             DataInputStream dataInputStream = new DataInputStream(fileInputStream)) {
+            for (int i = 0; i < countToSkip; i++) {
+                readLine(dataInputStream);
+            }
+            while (dataInputStream.available() > 0) {
+                int byteValue = dataInputStream.readUnsignedByte();
+                result.append(byteValue).append(" ");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
     private static PortableAnymap convertFileToMatrix(String s){
         String[] elements = s.split(" ");
@@ -67,13 +104,13 @@ public class Convert {
 
         portableAnymap.setHeight(Integer.parseInt(elements[2]));
         portableAnymap.setWidth(Integer.parseInt(elements[1]));
-        if(elements[0].equals("P1") || elements[0].equals("P4")){
-            convertP1(portableAnymap, s);
-        } else if(elements[0].equals("P2") || elements[0].equals("P5")){
-            convertP2(portableAnymap, s);
-        }else if(elements[0].equals("P3") || elements[0].equals("P6")){
-            portableAnymap.setColor(Integer.parseInt(elements[3]));
-            convertP3(portableAnymap,s);
+        switch (elements[0]) {
+            case "P1", "P4" -> convertP1(portableAnymap, s);
+            case "P2", "P5" -> convertP2(portableAnymap, s);
+            case "P3", "P6" -> {
+                portableAnymap.setColor(Integer.parseInt(elements[3]));
+                convertP3(portableAnymap, s);
+            }
         }
         return portableAnymap;
     }

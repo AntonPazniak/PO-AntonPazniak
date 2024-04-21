@@ -19,7 +19,7 @@ public class SDP {
             File file = fileChooser.getSelectedFile();
             int dotIndex = file.getName().lastIndexOf('.');
             if (dotIndex > 0) {
-                String fileExtension = file.getName().substring(dotIndex + 1);
+                String fileExtghghhgension = file.getName().substring(dotIndex + 1);
                 portableAnymap1 = Convert.open(file.getAbsolutePath());
                 switch (mun) {
                     case 0 -> sum(portableAnymap, portableAnymap1);
