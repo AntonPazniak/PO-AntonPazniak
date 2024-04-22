@@ -72,8 +72,6 @@ public final class Convert {
                 }
                 result = convertRawToString(filePath, sb, countLinesSkip);
             }
-
-            System.out.println(result);
             return convertStringToAscii(String.valueOf(result)).trim();
         }
     }

@@ -21,13 +21,15 @@ public final class MainWindow extends JFrame {
     private static MainWindow mainWindow;
     private final JMenuItem openItem, saveItem, exitItem;
     private final JMenuBar menuBar;
-    private final JMenu fileMenu;
-    private final JMenu pointMenu;
+    private final JMenu fileMenu = new JMenu("File");
+    private final JMenu pointMenu = new JMenu("Point");
     private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
-    private final JMenu histogramMenu;
+    private final JMenu histogramMenu = new JMenu("Histogram");
     private final JMenuItem RGBHistogramItem, grayHistogramItem, stretchingHistogramItem, equalizationItem;
-    private final JMenu splotMenu;
+    private final JMenu splotMenu = new JMenu("Splot");
     private final JMenuItem testItem, sobelItem, previtItem, robertsItem, laplaceItem, loGItem, gaussItem;
+    private final JMenu binarizationMenu = new JMenu("Binarization");
+    private final JMenuItem binarizationItem = new JMenuItem("Binarize");
     private final JLabel imageLabel;
     private File openFile;
     private ImageIcon originalIcon;
@@ -46,13 +48,13 @@ public final class MainWindow extends JFrame {
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(imageLabel, BorderLayout.CENTER);
 
-        fileMenu = new JMenu("File");
+
 
         openItem = new JMenuItem("open");
         saveItem = new JMenuItem("seave");
         exitItem = new JMenuItem("exit");
 
-        pointMenu = new JMenu("Point");
+
 
         desaturationItem = new JMenuItem("Desaturation");
         negativeItem = new JMenuItem("Negative");
@@ -72,8 +74,6 @@ public final class MainWindow extends JFrame {
         pointMenu.add(productItem);
         pointMenu.add(saturationItem);
 
-        histogramMenu = new JMenu("Histogram");
-
         RGBHistogramItem = new JMenuItem("RGB");
         grayHistogramItem = new JMenuItem("Gray");
         stretchingHistogramItem = new JMenuItem("Stretching");
@@ -86,8 +86,6 @@ public final class MainWindow extends JFrame {
         histogramMenu.add(equalizationItem);
 
 
-
-        splotMenu = new JMenu("Splot");
         testItem = new JMenuItem("test");
 
         sobelItem = new JMenuItem("Sobel");
@@ -105,6 +103,7 @@ public final class MainWindow extends JFrame {
         splotMenu.add(loGItem);
         splotMenu.add(gaussItem);
 
+        binarizationMenu.add(binarizationItem);
 
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
@@ -115,6 +114,7 @@ public final class MainWindow extends JFrame {
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
         menuBar.add(splotMenu);
+        menuBar.add(binarizationMenu);
         setJMenuBar(menuBar);
 
         setSize(width, height);
@@ -309,6 +309,12 @@ public final class MainWindow extends JFrame {
             portableAnymap.updateImage();
             resizeImage();
         });
+
+        binarizationItem.addActionListener(e -> {
+            BinarizationWindow.createBinarization(portableAnymap);
+            resizeImage();
+        });
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         exitItem.addActionListener(e -> System.exit(0));

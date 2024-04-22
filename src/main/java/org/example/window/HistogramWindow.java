@@ -5,49 +5,47 @@ import org.example.models.PortableAnymap;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class HistogramWindow extends JFrame {
+public final class HistogramWindow extends JFrame {
 
-    public HistogramWindow(double[][] histogram, boolean isRGB) {
+    private HistogramWindow(double[][] histogram, boolean isRGB) {
         super("Histogram");
 
-
         HistogramDataset dataset = new HistogramDataset();
-        JFreeChart chart;
+
         if (isRGB) {
-            dataset.addSeries("Red", histogram[0], 255);
-            dataset.addSeries("Blue", histogram[2], 255);
-            dataset.addSeries("Green", histogram[1], 255);
-
-            chart = ChartFactory.createHistogram(
-                    "Histogram of Image",
-                    "Pixel Value",
-                    "Frequency",
-                    dataset
-            );
+            dataset.addSeries("Red", histogram[0], 256);
+            dataset.addSeries("Green", histogram[1], 256);
+            dataset.addSeries("Blue", histogram[2], 256);
         } else {
-            dataset.addSeries("Gray", histogram[0], 255);
-
-            chart = ChartFactory.createHistogram(
-                    "Histogram of Image",
-                    "Pixel Value",
-                    "Frequency",
-                    dataset
-            );
+            dataset.addSeries("Gray", histogram[0], 256);
         }
 
+        JFreeChart chart = ChartFactory.createHistogram(
+                "Histogram of Image",
+                "Pixel Value",
+                "Frequency",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(300, 200));
+        chartPanel.setPreferredSize(new Dimension(800, 600));
 
         setContentPane(chartPanel);
 
         pack();
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }
+
 
     public static void creatHistogramRGB(PortableAnymap image) {
         HistogramWindow histogramWindow = new HistogramWindow(Histogram.getRGBHistogram(image), true);
