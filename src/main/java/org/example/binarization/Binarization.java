@@ -46,7 +46,6 @@ public final class Binarization {
         PointFilter pointFilter = new Desaturation();
         pointFilter.convert(image);
 
-
         float sum = 0;
         for (int i = 0; i < 256; i++) {
             sum += (i * histogram[i]);
@@ -59,7 +58,7 @@ public final class Binarization {
         int threshold = 0;
 
         for (int i = 0; i < 256; i++) {
-            wB += (int) histogram[i];
+            wB += histogram[i];
             if (wB == 0) continue;
 
             wF = totalPixels - wB;

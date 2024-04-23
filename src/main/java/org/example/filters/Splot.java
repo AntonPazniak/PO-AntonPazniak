@@ -34,14 +34,6 @@ public class Splot {
             {1, 0, -1},
             {1, 0, -1}
     };
-    
-    private static final float[][] gauss = {
-            { 1, 4, 7, 4, 1},
-            {4, 16, 26, 16, 4},
-            {7, 26, 41, 26, 7},
-            {4, 16, 26, 16, 4,},
-            {1, 4, 7, 4, 1}
-    };
 
     public static void sobel(int[][][] matrix) {
         starSplot(sobel, matrix);
@@ -63,25 +55,32 @@ public class Splot {
         starSplot(previt, matrix);
     }
 
-    public static void gauss(PortableAnymap portableAnymap) {
-        portableAnymap.setMatrix(test(createGaussianMatrix(11, 1.5f), portableAnymap.getMatrix()));
+    public static void gauss(PortableAnymap image) {
+        int[][][] imageMatrix = image.getMatrix();
+        image.setMatrix(test(createGaussianKernel(5, 2), imageMatrix));
     }
 
-    private static float gaussianFunction(float x, float y, float sigma) {
-        return (float) ((1.0 / (2.0 * Math.PI * sigma * sigma)) * Math.exp(-(x * x + y * y) / (2.0 * sigma * sigma)));
-    }
 
-    private static float[][] createGaussianMatrix(int size, float sigma) {
-        float[][] matrix = new float[size][size];
+    public static float[][] createGaussianKernel(int size, float sigma) {
+        float[][] kernel = new float[size][size];
+        float sum = 0;
+
         int halfSize = size / 2;
-
-        for (int i = -halfSize; i <= halfSize; i++) {
-            for (int j = -halfSize; j <= halfSize; j++) {
-                matrix[i + halfSize][j + halfSize] = gaussianFunction(i, j, sigma);
+        for (int x = -halfSize; x <= halfSize; x++) {
+            for (int y = -halfSize; y <= halfSize; y++) {
+                float value = (float) (Math.exp(-(x * x + y * y) / (2 * sigma * sigma)) / (2 * Math.PI * sigma * sigma));
+                kernel[x + halfSize][y + halfSize] = value;
+                sum += value;
             }
         }
 
-        return matrix;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                kernel[i][j] /= sum;
+            }
+        }
+
+        return kernel;
     }
 
     public static void starSplot(float[][] splotMatrix, int[][][] imageMatrix) {
@@ -89,28 +88,34 @@ public class Splot {
     }
 
     public static int[][][] test(float[][] splotMatrix, int[][][] imageMatrix) {
-        int startPos = splotMatrix.length / 2;
+        int kernelSize = splotMatrix.length;
+        int startPos = kernelSize / 2;
         int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
-        for (int x = startPos; x < expandMatrix.length - 1 - startPos; x++) {
-            for (int y = startPos; y < expandMatrix[0].length - 1 - startPos; y++) {
-                float read = 0;
+
+        for (int x = startPos; x < expandMatrix.length - startPos; x++) {
+            for (int y = startPos; y < expandMatrix[0].length - startPos; y++) {
+                float red = 0;
                 float green = 0;
                 float blue = 0;
-                for (int i = 0; i < splotMatrix.length; i++) {
-                    for (int j = 0; j < splotMatrix[0].length; j++) {
-                        read += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][0];
+
+                for (int i = 0; i < kernelSize; i++) {
+                    for (int j = 0; j < kernelSize; j++) {
+                        red += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][0];
                         green += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][1];
                         blue += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][2];
                     }
                 }
+
                 int[] color = new int[3];
-                color[0] = (int) Math.min(255, Math.max(0, read / 2));
-                color[1] = (int) Math.min(255, Math.max(0, green / 2));
-                color[2] = (int) Math.min(255, Math.max(0, blue / 2));
+                color[0] = (int) Math.min(255, Math.max(0, red));
+                color[1] = (int) Math.min(255, Math.max(0, green));
+                color[2] = (int) Math.min(255, Math.max(0, blue));
+
                 newMatrix[x - startPos][y - startPos] = color;
             }
         }
+
         return newMatrix;
     }
 
