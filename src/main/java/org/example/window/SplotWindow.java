@@ -16,7 +16,7 @@ public class SplotWindow extends JFrame {
     private JTextField[][] jTextFields;
     private PortableAnymap image;
 
-    public SplotWindow(String title, PortableAnymap image, MainWindow window) {
+    public SplotWindow(String title, PortableAnymap image) {
         super(title);
         this.image = image;
 
@@ -87,7 +87,7 @@ public class SplotWindow extends JFrame {
                 }
                 image.setMatrix(Splot.test(matrix, image.getMatrix()));
                 image.updateImage();
-                window.resizeImage();
+                MainWindow.getMainWindow().resizeImage();
             }
         });
 
@@ -97,8 +97,8 @@ public class SplotWindow extends JFrame {
         setVisible(true);
     }
 
-    public static void test(PortableAnymap image, MainWindow mainWindow) {
-        SwingUtilities.invokeLater(() -> new SplotWindow("SplotWindow Demo", image, mainWindow));
+    public static void test(PortableAnymap image) {
+        SwingUtilities.invokeLater(() -> new SplotWindow("SplotWindow Demo", image));
     }
 
 }

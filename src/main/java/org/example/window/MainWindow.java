@@ -20,11 +20,13 @@ public final class MainWindow extends JFrame {
 
     @Getter
     private static MainWindow mainWindow;
+    private final JMenuBar menuBar = new JMenuBar();
+    //file menu
+    private final JMenu fileMenu = new JMenu("File");
     private final JMenuItem openItem = new JMenuItem("open");
     private final JMenuItem saveItem = new JMenuItem("seave");
     private final JMenuItem exitItem = new JMenuItem("exit");
-    private final JMenuBar menuBar = new JMenuBar();
-    private final JMenu fileMenu = new JMenu("File");
+    // point menu
     private final JMenu pointMenu = new JMenu("Point");
     private final JMenuItem desaturationItem = new JMenuItem("Desaturation");
     private final JMenuItem negativeItem = new JMenuItem("Negative");
@@ -34,11 +36,13 @@ public final class MainWindow extends JFrame {
     private final JMenuItem differenceItem = new JMenuItem("Difference");
     private final JMenuItem productItem = new JMenuItem("Product");
     private final JMenuItem saturationItem = new JMenuItem("Saturation");
+    // histogram
     private final JMenu histogramMenu = new JMenu("Histogram");
     private final JMenuItem RGBHistogramItem = new JMenuItem("RGB");
     private final JMenuItem grayHistogramItem = new JMenuItem("Gray");
     private final JMenuItem stretchingHistogramItem = new JMenuItem("Stretching");
     private final JMenuItem equalizationItem = new JMenuItem("Equalization");
+    // splot
     private final JMenu splotMenu = new JMenu("Splot");
     private final JMenuItem testItem = new JMenuItem("test");
     private final JMenuItem sobelItem = new JMenuItem("Sobel");
@@ -47,9 +51,11 @@ public final class MainWindow extends JFrame {
     private final JMenuItem laplaceItem = new JMenuItem("Laplace");
     private final JMenuItem loGItem = new JMenuItem("LoG");
     private final JMenuItem gaussItem = new JMenuItem("Gauss");
+    // binarization
     private final JMenu binarizationMenu = new JMenu("Binarization");
     private final JMenuItem binarizationItem = new JMenuItem("Binarize");
     private final JMenuItem otsusMethod = new JMenuItem("Otsu's method");
+
     private final JLabel imageLabel = new JLabel();
     private File openFile;
     private ImageIcon originalIcon;
@@ -65,6 +71,11 @@ public final class MainWindow extends JFrame {
         setJMenuBar(menuBar);
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(imageLabel, BorderLayout.CENTER);
+
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
 
         pointMenu.add(desaturationItem);
         pointMenu.add(negativeItem);
@@ -90,11 +101,6 @@ public final class MainWindow extends JFrame {
 
         binarizationMenu.add(binarizationItem);
         binarizationMenu.add(otsusMethod);
-
-        fileMenu.add(openItem);
-        fileMenu.add(saveItem);
-        fileMenu.addSeparator();
-        fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
@@ -259,7 +265,7 @@ public final class MainWindow extends JFrame {
             resizeImage();
         });
 
-        testItem.addActionListener(e -> SplotWindow.test(portableAnymap, MainWindow.this));
+        testItem.addActionListener(e -> SplotWindow.test(portableAnymap));
 
         sobelItem.addActionListener(e -> {
             Splot.sobel(portableAnymap.getMatrix());
