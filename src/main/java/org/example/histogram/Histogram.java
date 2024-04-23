@@ -32,7 +32,7 @@ public class Histogram {
         return new double[][]{redData, greenData, blueData};
     }
 
-    private static int[][] getIntHistogram(int[][][] imageMatrix) {
+    public static int[][] getIntHistogram(int[][][] imageMatrix) {
         int[][] histogram = new int[3][256];
         for (int[][] row : imageMatrix) {
             for (int[] pixel : row) {

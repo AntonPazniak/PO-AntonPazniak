@@ -2,6 +2,7 @@ package org.example.window;
 
 
 import lombok.Getter;
+import org.example.binarization.Binarization;
 import org.example.filters.Splot;
 import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
@@ -19,18 +20,37 @@ public final class MainWindow extends JFrame {
 
     @Getter
     private static MainWindow mainWindow;
-    private final JMenuItem openItem, saveItem, exitItem;
-    private final JMenuBar menuBar;
+    private final JMenuItem openItem = new JMenuItem("open");
+    private final JMenuItem saveItem = new JMenuItem("seave");
+    private final JMenuItem exitItem = new JMenuItem("exit");
+    private final JMenuBar menuBar = new JMenuBar();
     private final JMenu fileMenu = new JMenu("File");
     private final JMenu pointMenu = new JMenu("Point");
-    private final JMenuItem desaturationItem, negativeItem, contrastItem, brightnessItem, sumItem, differenceItem, productItem, saturationItem;
+    private final JMenuItem desaturationItem = new JMenuItem("Desaturation");
+    private final JMenuItem negativeItem = new JMenuItem("Negative");
+    private final JMenuItem contrastItem = new JMenuItem("Contrast");
+    private final JMenuItem brightnessItem = new JMenuItem("Brightness");
+    private final JMenuItem sumItem = new JMenuItem("Sum");
+    private final JMenuItem differenceItem = new JMenuItem("Difference");
+    private final JMenuItem productItem = new JMenuItem("Product");
+    private final JMenuItem saturationItem = new JMenuItem("Saturation");
     private final JMenu histogramMenu = new JMenu("Histogram");
-    private final JMenuItem RGBHistogramItem, grayHistogramItem, stretchingHistogramItem, equalizationItem;
+    private final JMenuItem RGBHistogramItem = new JMenuItem("RGB");
+    private final JMenuItem grayHistogramItem = new JMenuItem("Gray");
+    private final JMenuItem stretchingHistogramItem = new JMenuItem("Stretching");
+    private final JMenuItem equalizationItem = new JMenuItem("Equalization");
     private final JMenu splotMenu = new JMenu("Splot");
-    private final JMenuItem testItem, sobelItem, previtItem, robertsItem, laplaceItem, loGItem, gaussItem;
+    private final JMenuItem testItem = new JMenuItem("test");
+    private final JMenuItem sobelItem = new JMenuItem("Sobel");
+    private final JMenuItem previtItem = new JMenuItem("Previt");
+    private final JMenuItem robertsItem = new JMenuItem("Roberts");
+    private final JMenuItem laplaceItem = new JMenuItem("Laplace");
+    private final JMenuItem loGItem = new JMenuItem("LoG");
+    private final JMenuItem gaussItem = new JMenuItem("Gauss");
     private final JMenu binarizationMenu = new JMenu("Binarization");
     private final JMenuItem binarizationItem = new JMenuItem("Binarize");
-    private final JLabel imageLabel;
+    private final JMenuItem otsusMethod = new JMenuItem("Otsu's method");
+    private final JLabel imageLabel = new JLabel();
     private File openFile;
     private ImageIcon originalIcon;
     private PortableAnymap portableAnymap;
@@ -39,31 +59,12 @@ public final class MainWindow extends JFrame {
 
     public MainWindow() {
         super("My GIMP");
-        menuBar = new JMenuBar();
 
         super.paintComponents(this.getGraphics());
 
         setJMenuBar(menuBar);
-        imageLabel = new JLabel();
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(imageLabel, BorderLayout.CENTER);
-
-
-
-        openItem = new JMenuItem("open");
-        saveItem = new JMenuItem("seave");
-        exitItem = new JMenuItem("exit");
-
-
-
-        desaturationItem = new JMenuItem("Desaturation");
-        negativeItem = new JMenuItem("Negative");
-        contrastItem = new JMenuItem("Contrast");
-        brightnessItem = new JMenuItem("Brightness");
-        sumItem = new JMenuItem("Sum");
-        differenceItem = new JMenuItem("Difference");
-        productItem = new JMenuItem("Product");
-        saturationItem = new JMenuItem("Saturation");
 
         pointMenu.add(desaturationItem);
         pointMenu.add(negativeItem);
@@ -74,26 +75,10 @@ public final class MainWindow extends JFrame {
         pointMenu.add(productItem);
         pointMenu.add(saturationItem);
 
-        RGBHistogramItem = new JMenuItem("RGB");
-        grayHistogramItem = new JMenuItem("Gray");
-        stretchingHistogramItem = new JMenuItem("Stretching");
-        equalizationItem = new JMenuItem("Equalization");
-
-
         histogramMenu.add(RGBHistogramItem);
         histogramMenu.add(grayHistogramItem);
         histogramMenu.add(stretchingHistogramItem);
         histogramMenu.add(equalizationItem);
-
-
-        testItem = new JMenuItem("test");
-
-        sobelItem = new JMenuItem("Sobel");
-        previtItem = new JMenuItem("Previt");
-        robertsItem = new JMenuItem("Roberts");
-        laplaceItem = new JMenuItem("Laplace");
-        loGItem = new JMenuItem("LoG");
-        gaussItem = new JMenuItem("Gauss");
 
         splotMenu.add(testItem);
         splotMenu.add(sobelItem);
@@ -104,6 +89,7 @@ public final class MainWindow extends JFrame {
         splotMenu.add(gaussItem);
 
         binarizationMenu.add(binarizationItem);
+        binarizationMenu.add(otsusMethod);
 
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
@@ -312,6 +298,11 @@ public final class MainWindow extends JFrame {
 
         binarizationItem.addActionListener(e -> {
             BinarizationWindow.createBinarization(portableAnymap);
+            resizeImage();
+        });
+
+        otsusMethod.addActionListener(e -> {
+            Binarization.otsuBinarization(portableAnymap);
             resizeImage();
         });
 
