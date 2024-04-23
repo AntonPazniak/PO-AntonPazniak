@@ -55,9 +55,9 @@ public class Splot {
         starSplot(previt, matrix);
     }
 
-    public static void gauss(PortableAnymap image) {
+    public static void gauss(PortableAnymap image, int size, int step) {
         int[][][] imageMatrix = image.getMatrix();
-        image.setMatrix(test(createGaussianKernel(5, 2), imageMatrix));
+        image.setMatrix(test(createGaussianKernel(size, step), imageMatrix));
     }
 
 

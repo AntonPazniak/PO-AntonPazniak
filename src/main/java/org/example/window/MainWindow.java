@@ -265,7 +265,7 @@ public final class MainWindow extends JFrame {
             resizeImage();
         });
 
-        testItem.addActionListener(e -> SplotWindow.test(portableAnymap));
+        testItem.addActionListener(e -> SplotWindow.createWindow(portableAnymap));
 
         sobelItem.addActionListener(e -> {
             Splot.sobel(portableAnymap.getMatrix());
@@ -285,10 +285,7 @@ public final class MainWindow extends JFrame {
             resizeImage();
         });
 
-        gaussItem.addActionListener(e -> {
-            Splot.gauss(portableAnymap);
-            resizeImage();
-        });
+        gaussItem.addActionListener(e -> GaussWindow.createWindow(portableAnymap));
 
         laplaceItem.addActionListener(e -> {
             Splot.laplace(portableAnymap.getMatrix());

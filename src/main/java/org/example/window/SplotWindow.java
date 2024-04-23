@@ -16,7 +16,7 @@ public class SplotWindow extends JFrame {
     private JTextField[][] jTextFields;
     private PortableAnymap image;
 
-    public SplotWindow(String title, PortableAnymap image) {
+    private SplotWindow(String title, PortableAnymap image) {
         super(title);
         this.image = image;
 
@@ -31,33 +31,30 @@ public class SplotWindow extends JFrame {
 
         JPanel mainPanel = new JPanel(new GridLayout(0, 1));
 
-        setButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (JPanel p : jPanels) {
-                    remove(p);
-                }
-                jPanels.clear();
-
-                int value = (int) spinner.getValue();
-
-                jTextFields = new JTextField[value][value];
-
-                mainPanel.removeAll();
-                mainPanel.setLayout(new GridLayout(value, value));
-                for (int i = 0; i < value; i++) {
-                    JPanel panel1 = new JPanel();
-                    for (int j = 0; j < value; j++) {
-                        JTextField textField = new JTextField(4);
-                        textField.setText(String.valueOf(0));
-                        panel1.add(textField);
-                        jTextFields[i][j] = textField;
-                    }
-                    jPanels.add(panel1);
-                    mainPanel.add(panel1);
-                }
-                revalidate(); // Refresh the layout
+        setButton.addActionListener(e -> {
+            for (JPanel p : jPanels) {
+                remove(p);
             }
+            jPanels.clear();
+
+            int value = (int) spinner.getValue();
+
+            jTextFields = new JTextField[value][value];
+
+            mainPanel.removeAll();
+            mainPanel.setLayout(new GridLayout(value, value));
+            for (int i = 0; i < value; i++) {
+                JPanel panel1 = new JPanel();
+                for (int j = 0; j < value; j++) {
+                    JTextField textField = new JTextField(4);
+                    textField.setText(String.valueOf(0));
+                    panel1.add(textField);
+                    jTextFields[i][j] = textField;
+                }
+                jPanels.add(panel1);
+                mainPanel.add(panel1);
+            }
+            revalidate(); // Refresh the layout
         });
         add(mainPanel, BorderLayout.CENTER);
 
@@ -97,7 +94,7 @@ public class SplotWindow extends JFrame {
         setVisible(true);
     }
 
-    public static void test(PortableAnymap image) {
+    public static void createWindow(PortableAnymap image) {
         SwingUtilities.invokeLater(() -> new SplotWindow("SplotWindow Demo", image));
     }
 
