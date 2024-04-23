@@ -1,5 +1,6 @@
 package org.example.window;
 
+import lombok.Getter;
 import org.example.filters.Splot;
 import org.example.models.PortableAnymap;
 
@@ -10,37 +11,33 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class SplotWindow extends JFrame {
 
     private final List<JPanel> jPanels = new ArrayList<>();
     private JTextField[][] jTextFields;
-    private PortableAnymap image;
+    private final SpinnerModel spinnerModel = new SpinnerNumberModel(1, 1, 100, 2);
+    private final JSpinner spinner = new JSpinner(spinnerModel);
+    private final JButton setButton = new JButton("Set");
+    private final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    private final Button filterButton = new Button("Filter");
+    private final JPanel mainPanel = new JPanel(new GridLayout(0, 1));
 
-    private SplotWindow(String title, PortableAnymap image) {
-        super(title);
-        this.image = image;
+    private SplotWindow() {
+        super("Splot");
 
-        SpinnerModel spinnerModel = new SpinnerNumberModel(1, 1, 100, 2);
-        JSpinner spinner = new JSpinner(spinnerModel);
-        JButton setButton = new JButton("Set");
         JPanel panel = new JPanel();
         panel.add(spinner);
         panel.add(setButton);
         add(panel, BorderLayout.NORTH);
-
-
-        JPanel mainPanel = new JPanel(new GridLayout(0, 1));
 
         setButton.addActionListener(e -> {
             for (JPanel p : jPanels) {
                 remove(p);
             }
             jPanels.clear();
-
             int value = (int) spinner.getValue();
-
             jTextFields = new JTextField[value][value];
-
             mainPanel.removeAll();
             mainPanel.setLayout(new GridLayout(value, value));
             for (int i = 0; i < value; i++) {
@@ -62,17 +59,23 @@ public class SplotWindow extends JFrame {
         Button button = new Button("Filter");
         panel1.add(button, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        Button filterButton = new Button("Filter");
+
         bottomPanel.add(filterButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        setSize(300, 300); // Increased height to accommodate more components
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setVisible(true);
+    }
 
-        filterButton.addActionListener(new ActionListener() {
+    public static void createWindow(PortableAnymap image) {
+        SplotWindow splotWindow = new SplotWindow();
+        splotWindow.getFilterButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JTextField[][] jTextFields = splotWindow.getJTextFields();
                 float[][] matrix = new float[jTextFields.length][jTextFields.length];
-                if (!jPanels.isEmpty()) {
+                if (!splotWindow.getJPanels().isEmpty()) {
                     for (int i = 0; i < jTextFields.length; i++) {
                         for (int j = 0; j < jTextFields[i].length; j++) {
                             String text = jTextFields[i][j].getText().trim();
@@ -87,15 +90,6 @@ public class SplotWindow extends JFrame {
                 MainWindow.getMainWindow().resizeImage();
             }
         });
-
-
-        setSize(300, 300); // Increased height to accommodate more components
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        setVisible(true);
-    }
-
-    public static void createWindow(PortableAnymap image) {
-        SwingUtilities.invokeLater(() -> new SplotWindow("SplotWindow Demo", image));
     }
 
 }
