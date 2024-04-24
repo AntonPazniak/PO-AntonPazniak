@@ -1,23 +1,18 @@
 package org.example.window;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class SliderWindow extends JFrame {
 
-    private JSlider slider;
-    private JButton saveButton, applyButton;
+    private final JSlider slider;
+    private final JButton saveButton = new JButton("Save");
+    private final JButton applyButton = new JButton("Apply");
 
-    public SliderWindow(String title, int max, int min, int start) {
+    protected SliderWindow(String title, int max, int min, int start) {
         super(title);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setSize(300, 150);
@@ -31,8 +26,6 @@ public class SliderWindow extends JFrame {
         panel.add(slider);
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        saveButton = new JButton("Save");
-        applyButton = new JButton("Apply");
 
         buttonPanel.add(applyButton);
         buttonPanel.add(saveButton);

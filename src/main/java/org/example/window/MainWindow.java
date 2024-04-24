@@ -7,7 +7,8 @@ import org.example.filters.Splot;
 import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
-import org.example.point_operation.*;
+import org.example.point_operation.Desaturation;
+import org.example.point_operation.Negative;
 
 import javax.swing.*;
 import java.awt.*;
@@ -207,49 +208,35 @@ public final class MainWindow extends JFrame {
 
         saveItem.addActionListener(e -> chooseSaveFolder());
         desaturationItem.addActionListener(e -> {
-            PointFilter pointFilter = new Desaturation();
-            pointFilter.convert(portableAnymap);
+            Desaturation.convert(portableAnymap);
             resizeImage();
         });
 
         negativeItem.addActionListener(e -> {
-            PointFilter pointFilter = new Negative();
-            pointFilter.convert(portableAnymap);
+            Negative.convert(portableAnymap);
             resizeImage();
         });
 
-        contrastItem.addActionListener(e -> {
-            PointFilter pointFilter = new Contrast();
-            pointFilter.convert(portableAnymap);
-            resizeImage();
-        });
+        contrastItem.addActionListener(e -> ContrastWindow.CreateWindow(portableAnymap));
 
-        brightnessItem.addActionListener(e -> {
-            PointFilter pointFilter = new Brightness();
-            pointFilter.convert(portableAnymap);
-            resizeImage();
-        });
+        brightnessItem.addActionListener(e -> BrightnessWindow.createWindow(portableAnymap));
 
         sumItem.addActionListener(e -> {
-            SDP.convert(0, portableAnymap);
+            SDPWindow.createSDPWindow(0, portableAnymap);
             resizeImage();
         });
 
         differenceItem.addActionListener(e -> {
-            SDP.convert(1, portableAnymap);
+            SDPWindow.createSDPWindow(1, portableAnymap);
             resizeImage();
         });
 
         productItem.addActionListener(e -> {
-            SDP.convert(2, portableAnymap);
+            SDPWindow.createSDPWindow(2, portableAnymap);
             resizeImage();
         });
 
-        saturationItem.addActionListener(e -> {
-            PointFilter pointFilter = new Negative();
-            pointFilter.convert(portableAnymap);
-            resizeImage();
-        });
+        saturationItem.addActionListener(e -> SaturationWindow.createWindow(portableAnymap));
 
         RGBHistogramItem.addActionListener(e -> HistogramWindow.creatHistogramRGB(portableAnymap));
 

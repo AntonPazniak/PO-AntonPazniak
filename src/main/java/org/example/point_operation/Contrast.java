@@ -1,61 +1,15 @@
 package org.example.point_operation;
 
 import org.example.models.PortableAnymap;
-import org.example.pars.CreateImageFromMatrix;
-import org.example.window.MainWindow;
-import org.example.window.SliderWindow;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-public class Contrast implements PointFilter {
+public class Contrast {
 
 
-    public void convert(PortableAnymap portableAnymap) {
-        SliderWindow slider = new SliderWindow("Test", 100, -100, 0);
-        slider.getApplyButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int[][][] workMatrix = portableAnymap.copyMatrix();
-                increaseContrast(workMatrix,
-                        getFactor(slider.getSlider().getValue()));
-                portableAnymap.setImage(CreateImageFromMatrix.createImageFromRGBMatrix(workMatrix));
-                MainWindow.getMainWindow().resizeImage();
-            }
-        });
-        slider.getSaveButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                increaseContrast(portableAnymap.getMatrix(),
-                        getFactor(slider.getSlider().getValue()));
-                portableAnymap.updateImage();
-                MainWindow.getMainWindow().resizeImage();
-                slider.dispose();
-            }
-        });
-
+    public static void convert(PortableAnymap portableAnymap, double factor) {
+        portableAnymap.setMatrix(increaseContrast(portableAnymap.getMatrix(), factor));
     }
 
-    private float getFactor(float factor) {
-        if (factor > 0) {
-            factor = factor / 10;
-        } else {
-            factor = Math.abs(factor / 100 + 1);
-        }
-        return factor;
-    }
-
-    private int getAverageMatrix(int[][][] matrix) {
-        int average = 0;
-        for (int[][] i : matrix) {
-            for (int[] j : i) {
-                average = average + j[2];
-            }
-        }
-        return average / matrix.length / 3;
-    }
-
-    private int[][][] increaseContrast(int[][][] imageMatrix, double factor) {
+    public static int[][][] increaseContrast(int[][][] imageMatrix, double factor) {
         for (int i = 0; i < imageMatrix.length; i++) {
             for (int j = 0; j < imageMatrix[i].length; j++) {
                 for (int k = 0; k < imageMatrix[i][j].length; k++) {

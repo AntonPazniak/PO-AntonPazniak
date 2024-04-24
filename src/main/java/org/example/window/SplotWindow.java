@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class SplotWindow extends JFrame {
+public final class SplotWindow extends JFrame {
 
     private final List<JPanel> jPanels = new ArrayList<>();
     private JTextField[][] jTextFields;

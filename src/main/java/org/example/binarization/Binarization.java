@@ -3,7 +3,6 @@ package org.example.binarization;
 import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
 import org.example.point_operation.Desaturation;
-import org.example.point_operation.PointFilter;
 
 public final class Binarization {
 
