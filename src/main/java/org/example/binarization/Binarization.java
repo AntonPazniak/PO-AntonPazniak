@@ -7,8 +7,7 @@ import org.example.point_operation.Desaturation;
 public final class Binarization {
 
     public static void simpleBinarization(PortableAnymap image, int minPixel, int maxPixel) {
-        PointFilter pointFilter = new Desaturation();
-        pointFilter.convert(image);
+        Desaturation.convert(image);
 
         int[][][] imageMatrix = image.getMatrix();
         for (int x = 0; x < imageMatrix.length; x++) {
@@ -31,8 +30,7 @@ public final class Binarization {
     public static void otsuBinarization(PortableAnymap image) {
         Histogram.stretching(image);
         Histogram.equalization(image);
-        PointFilter pointFilter = new Desaturation();
-        pointFilter.convert(image);
+        Desaturation.convert(image);
         int[][] histogram = Histogram.getIntHistogram(image.getMatrix());
         int threshold = calculateOtsuThreshold(image, histogram[0]);
         applyThreshold(image, threshold);
@@ -42,8 +40,7 @@ public final class Binarization {
 
     private static int calculateOtsuThreshold(PortableAnymap image, int[] histogram) {
         int totalPixels = image.getWidth() * image.getHeight();
-        PointFilter pointFilter = new Desaturation();
-        pointFilter.convert(image);
+        Desaturation.convert(image);
 
         float sum = 0;
         for (int i = 0; i < 256; i++) {
