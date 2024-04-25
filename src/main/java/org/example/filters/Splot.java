@@ -37,7 +37,6 @@ public class Splot {
     };
 
     public static void sobel(PortableAnymap image) {
-        Desaturation.convert(image);
         image.setMatrix(applySobel(image.getMatrix()));
     }
 
@@ -98,27 +97,28 @@ public class Splot {
     }
 
     public static int[][][] applySplot(float[][] splotMatrix, int[][][] imageMatrix) {
-        int kernelSize = splotMatrix.length;
-        int startPos = kernelSize / 2;
+        int startPos = splotMatrix.length / 2;
         int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
+        for (int x = startPos; x < imageMatrix.length; x++) {
+            for (int y = startPos; y < imageMatrix[x].length + 1; y++) {
+                int[] color = new int[3];
+                for (int z = 0; z < 3; z++) {
+                    int newPixel = (int) Math.min(255,
+                            Math.max(0,
+                                    getCore(splotMatrix, expandMatrix, startPos, x, y, z)));
+                    color[z] = newPixel;
+                }
 
-        for (int x = startPos; x < expandMatrix.length - startPos; x++) {
-            for (int y = startPos; y < expandMatrix[0].length - startPos; y++) {
-
-                int newPixel = (int) Math.min(255,
-                        Math.max(0,
-                                getCore(splotMatrix, expandMatrix, kernelSize, startPos, x, y)));
-
-                newMatrix[x][y] = new int[]{newPixel, newPixel, newPixel};
+                newMatrix[x - startPos][y - startPos] = color;
             }
         }
+
 
         return newMatrix;
     }
 
     public static int[][][] applySobel(int[][][] imageMatrix) {
-        int kernelSize = 3;
         int startPos = 1;
         float[][] sobelY = transpose(sobelX);
 
@@ -128,27 +128,30 @@ public class Splot {
         for (int x = startPos; x < imageMatrix.length; x++) {
             for (int y = startPos; y < imageMatrix[0].length; y++) {
 
-                float pixelX = getCore(sobelX, expandMatrix, kernelSize, startPos, x, y);
-                float pixelY = getCore(sobelY, expandMatrix, kernelSize, startPos, x, y);
+                int[] color = new int[3];
+                for (int z = 0; z < 3; z++) {
+                    float pixelX = getCore(sobelX, expandMatrix, startPos, x, y, z);
+                    float pixelY = getCore(sobelY, expandMatrix, startPos, x, y, z);
 
-                int newPixel = (int) Math.min(255,
-                        Math.max(0,
-                                Math.sqrt((
-                                        Math.pow(pixelX, 2) +
-                                                Math.pow(pixelY, 2)))));
+                    color[z] = (int) Math.min(255,
+                            Math.max(0,
+                                    Math.sqrt((
+                                            Math.pow(pixelX, 2) +
+                                                    Math.pow(pixelY, 2)))));
+                }
 
-                newMatrix[x][y] = new int[]{newPixel, newPixel, newPixel};
+                newMatrix[x][y] = color;
             }
         }
 
         return newMatrix;
     }
 
-    private static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int kernelSize, int startPos, int x, int y) {
+    private static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
         float pixel = 0;
-        for (int i = 0; i < kernelSize; i++) {
-            for (int j = 0; j < kernelSize; j++) {
-                pixel += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][0];
+        for (int i = 0; i < splotMatrix.length; i++) {
+            for (int j = 0; j < splotMatrix[i].length; j++) {
+                pixel += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][z];
             }
         }
         return Math.abs(pixel);
@@ -157,17 +160,21 @@ public class Splot {
 
 
     private static int[][][] expandMatrix(int[][][] matrix, int sizeIncrease) {
-        int[][][] newMatrix = new int[matrix.length + sizeIncrease][matrix[0].length + sizeIncrease][3];
-        for (int i = 0; i < newMatrix.length; i++) {
-            for (int j = 0; j < newMatrix[0].length; j++) {
-                if (i < sizeIncrease || i > newMatrix.length - 1 - sizeIncrease) {
-                    newMatrix[i][j] = new int[]{1, 1, 1};
-                } else if (j < sizeIncrease || j > newMatrix[0].length - 1 - sizeIncrease) {
-                    newMatrix[i][j] = new int[]{1, 1, 1};
-                } else
-                    newMatrix[i][j] = matrix[i][j];
+        int newWidth = matrix.length + 2 * sizeIncrease;
+        int newHeight = matrix[0].length + 2 * sizeIncrease;
+        int[][][] newMatrix = new int[newWidth][newHeight][3];
+
+        for (int i = 0; i < newWidth; i++) {
+            for (int j = 0; j < newHeight; j++) {
+                if (i < sizeIncrease || i >= matrix.length + sizeIncrease ||
+                        j < sizeIncrease || j >= matrix[0].length + sizeIncrease) {
+                    newMatrix[i][j] = new int[]{0, 0, 0};
+                } else {
+                    newMatrix[i][j] = matrix[i - sizeIncrease][j - sizeIncrease];
+                }
             }
         }
+
         return newMatrix;
     }
 

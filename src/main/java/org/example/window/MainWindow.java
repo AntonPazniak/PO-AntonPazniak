@@ -3,6 +3,7 @@ package org.example.window;
 
 import lombok.Getter;
 import org.example.binarization.Binarization;
+import org.example.canny.CannyEdgeDetector;
 import org.example.filters.Splot;
 import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
@@ -56,6 +57,9 @@ public final class MainWindow extends JFrame {
     private final JMenu binarizationMenu = new JMenu("Binarization");
     private final JMenuItem binarizationItem = new JMenuItem("Binarize");
     private final JMenuItem otsusMethod = new JMenuItem("Otsu's method");
+    // Canny
+    private final JMenu cannyMenu = new JMenu("Canny");
+    private final JMenuItem cannyItem = new JMenuItem("Canny edge detector");
 
     private final JLabel imageLabel = new JLabel();
     private File openFile;
@@ -103,11 +107,14 @@ public final class MainWindow extends JFrame {
         binarizationMenu.add(binarizationItem);
         binarizationMenu.add(otsusMethod);
 
+        cannyMenu.add(cannyItem);
+
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
         menuBar.add(splotMenu);
         menuBar.add(binarizationMenu);
+        menuBar.add(cannyMenu);
         setJMenuBar(menuBar);
 
         setSize(width, height);
@@ -255,34 +262,29 @@ public final class MainWindow extends JFrame {
         testItem.addActionListener(e -> SplotWindow.createWindow(portableAnymap));
 
         sobelItem.addActionListener(e -> {
-            Splot.sobel(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
+            Splot.sobel(portableAnymap);
             resizeImage();
         });
 
         previtItem.addActionListener(e -> {
-            Splot.previt(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
+            Splot.previt(portableAnymap);
             resizeImage();
         });
 
         robertsItem.addActionListener(e -> {
-            Splot.roberts(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
+            Splot.roberts(portableAnymap);
             resizeImage();
         });
 
         gaussItem.addActionListener(e -> GaussWindow.createWindow(portableAnymap));
 
         laplaceItem.addActionListener(e -> {
-            Splot.laplace(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
+            Splot.laplace(portableAnymap);
             resizeImage();
         });
 
         loGItem.addActionListener(e -> {
-            Splot.loG(portableAnymap.getMatrix());
-            portableAnymap.updateImage();
+            Splot.loG(portableAnymap);
             resizeImage();
         });
 
@@ -293,6 +295,11 @@ public final class MainWindow extends JFrame {
 
         otsusMethod.addActionListener(e -> {
             Binarization.otsuBinarization(portableAnymap);
+            resizeImage();
+        });
+
+        cannyItem.addActionListener(e -> {
+            CannyEdgeDetector.convert(portableAnymap);
             resizeImage();
         });
 
