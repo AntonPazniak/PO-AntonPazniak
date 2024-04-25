@@ -19,7 +19,7 @@ public class Desaturation {
                 int R = matrix[i][j][0];
                 int G = matrix[i][j][1];
                 int B = matrix[i][j][2];
-                int Y = (int) (0.2126 * R + 0.7152 * G + 0.0722 * B);
+                int Y = (int) (0.299 * R + 0.587 * G + 0.114 * B);
                 newMatrix[i][j] = new int[]{Y, Y, Y};
             }
         }

@@ -1,27 +1,28 @@
 package org.example.filters;
 
 import org.example.models.PortableAnymap;
+import org.example.point_operation.Desaturation;
 
 public class Splot {
 
-    private static final float[][] sobel = {
+    private static final float[][] sobelX = {
             {1, 0, -1},
             {2, 0, -2},
             {1, 0, -1}
     };
 
-    private static final float[][] roberts = {
+    private static final float[][] ROBERTS = {
             {1, 0},
             {0, -1}
     };
 
-    private static final float[][] laplace = {
+    private static final float[][] LAPLACE = {
             {0, 1, 0},
             {1, -4, 1},
             {0, 1, 0}
     };
 
-    private static final float[][] LoG = {
+    private static final float[][] LOG = {
             {0, 0, -1, 0, 0},
             {0, -1, -2, -1, 0},
             {-1, -2, 16, -2, -1},
@@ -29,39 +30,48 @@ public class Splot {
             {0, 0, -1, 0, 0}
     };
 
-    private static final float[][] previt = {
+    private static final float[][] PRIVET = {
             {1, 0, -1},
             {1, 0, -1},
             {1, 0, -1}
     };
 
-    public static void sobel(int[][][] matrix) {
-        starSplot(sobel, matrix);
+    public static void sobel(PortableAnymap image) {
+        Desaturation.convert(image);
+        image.setMatrix(applySobel(image.getMatrix()));
     }
 
-    public static void roberts(int[][][] matrix) {
-        starSplot(roberts, matrix);
+    public static void roberts(PortableAnymap image) {
+        Desaturation.convert(image);
+        starSplot(ROBERTS, image.getMatrix());
+        image.updateImage();
     }
 
-    public static void laplace(int[][][] matrix) {
-        starSplot(laplace, matrix);
+    public static void laplace(PortableAnymap image) {
+        Desaturation.convert(image);
+        starSplot(LAPLACE, image.getMatrix());
+        image.updateImage();
     }
 
-    public static void loG(int[][][] matrix) {
-        starSplot(LoG, matrix);
+    public static void loG(PortableAnymap image) {
+        Desaturation.convert(image);
+        starSplot(LOG, image.getMatrix());
+        image.updateImage();
     }
 
-    public static void previt(int[][][] matrix) {
-        starSplot(previt, matrix);
+    public static void previt(PortableAnymap image) {
+        Desaturation.convert(image);
+        starSplot(PRIVET, image.getMatrix());
+        image.updateImage();
     }
 
-    public static void gauss(PortableAnymap image, int size, int step) {
+    public static void gauss(PortableAnymap image, int size, double step) {
         int[][][] imageMatrix = image.getMatrix();
-        image.setMatrix(test(createGaussianKernel(size, step), imageMatrix));
+        image.setMatrix(applySplot(createGaussianKernel(size, step), imageMatrix));
     }
 
 
-    public static float[][] createGaussianKernel(int size, float sigma) {
+    public static float[][] createGaussianKernel(int size, double sigma) {
         float[][] kernel = new float[size][size];
         float sum = 0;
 
@@ -84,10 +94,10 @@ public class Splot {
     }
 
     public static void starSplot(float[][] splotMatrix, int[][][] imageMatrix) {
-        sumMatrix(test(splotMatrix, imageMatrix), test(transpose(splotMatrix), imageMatrix), imageMatrix);
+        sumMatrix(applySplot(splotMatrix, imageMatrix), applySplot(transpose(splotMatrix), imageMatrix), imageMatrix);
     }
 
-    public static int[][][] test(float[][] splotMatrix, int[][][] imageMatrix) {
+    public static int[][][] applySplot(float[][] splotMatrix, int[][][] imageMatrix) {
         int kernelSize = splotMatrix.length;
         int startPos = kernelSize / 2;
         int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
@@ -95,29 +105,56 @@ public class Splot {
 
         for (int x = startPos; x < expandMatrix.length - startPos; x++) {
             for (int y = startPos; y < expandMatrix[0].length - startPos; y++) {
-                float red = 0;
-                float green = 0;
-                float blue = 0;
 
-                for (int i = 0; i < kernelSize; i++) {
-                    for (int j = 0; j < kernelSize; j++) {
-                        red += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][0];
-                        green += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][1];
-                        blue += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][2];
-                    }
-                }
+                int newPixel = (int) Math.min(255,
+                        Math.max(0,
+                                getCore(splotMatrix, expandMatrix, kernelSize, startPos, x, y)));
 
-                int[] color = new int[3];
-                color[0] = (int) Math.min(255, Math.max(0, red));
-                color[1] = (int) Math.min(255, Math.max(0, green));
-                color[2] = (int) Math.min(255, Math.max(0, blue));
-
-                newMatrix[x - startPos][y - startPos] = color;
+                newMatrix[x][y] = new int[]{newPixel, newPixel, newPixel};
             }
         }
 
         return newMatrix;
     }
+
+    public static int[][][] applySobel(int[][][] imageMatrix) {
+        int kernelSize = 3;
+        int startPos = 1;
+        float[][] sobelY = transpose(sobelX);
+
+        int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
+        int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
+
+        for (int x = startPos; x < imageMatrix.length; x++) {
+            for (int y = startPos; y < imageMatrix[0].length; y++) {
+
+                float pixelX = getCore(sobelX, expandMatrix, kernelSize, startPos, x, y);
+                float pixelY = getCore(sobelY, expandMatrix, kernelSize, startPos, x, y);
+
+                int newPixel = (int) Math.min(255,
+                        Math.max(0,
+                                Math.sqrt((
+                                        Math.pow(pixelX, 2) +
+                                                Math.pow(pixelY, 2)))));
+
+                newMatrix[x][y] = new int[]{newPixel, newPixel, newPixel};
+            }
+        }
+
+        return newMatrix;
+    }
+
+    private static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int kernelSize, int startPos, int x, int y) {
+        float pixel = 0;
+        for (int i = 0; i < kernelSize; i++) {
+            for (int j = 0; j < kernelSize; j++) {
+                pixel += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][0];
+            }
+        }
+        return Math.abs(pixel);
+    }
+
+
 
     private static int[][][] expandMatrix(int[][][] matrix, int sizeIncrease) {
         int[][][] newMatrix = new int[matrix.length + sizeIncrease][matrix[0].length + sizeIncrease][3];

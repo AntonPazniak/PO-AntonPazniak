@@ -34,7 +34,7 @@ public final class GaussWindow extends JFrame {
         GaussWindow gaussWindow = new GaussWindow();
         gaussWindow.getOkButton().addActionListener(e -> {
             int size = (int) gaussWindow.getSpinner().getValue();
-            int step = Integer.parseInt(gaussWindow.getStepTextField().getText());
+            double step = Double.parseDouble(gaussWindow.getStepTextField().getText());
             Splot.gauss(image, size, step);
             MainWindow.getMainWindow().resizeImage();
         });

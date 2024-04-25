@@ -38,7 +38,7 @@ public final class Binarization {
     }
 
 
-    private static int calculateOtsuThreshold(PortableAnymap image, int[] histogram) {
+    public static int calculateOtsuThreshold(PortableAnymap image, int[] histogram) {
         int totalPixels = image.getWidth() * image.getHeight();
         Desaturation.convert(image);
 

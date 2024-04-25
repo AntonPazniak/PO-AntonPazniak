@@ -85,7 +85,7 @@ public final class SplotWindow extends JFrame {
                         }
                     }
                 }
-                image.setMatrix(Splot.test(matrix, image.getMatrix()));
+                image.setMatrix(Splot.applySplot(matrix, image.getMatrix()));
                 image.updateImage();
                 MainWindow.getMainWindow().resizeImage();
             }
