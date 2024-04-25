@@ -1,7 +1,6 @@
 package org.example.filters;
 
 import org.example.models.PortableAnymap;
-import org.example.point_operation.Desaturation;
 
 public class Splot {
 
@@ -41,25 +40,21 @@ public class Splot {
     }
 
     public static void roberts(PortableAnymap image) {
-        Desaturation.convert(image);
         starSplot(ROBERTS, image.getMatrix());
         image.updateImage();
     }
 
     public static void laplace(PortableAnymap image) {
-        Desaturation.convert(image);
         starSplot(LAPLACE, image.getMatrix());
         image.updateImage();
     }
 
     public static void loG(PortableAnymap image) {
-        Desaturation.convert(image);
         starSplot(LOG, image.getMatrix());
         image.updateImage();
     }
 
     public static void previt(PortableAnymap image) {
-        Desaturation.convert(image);
         starSplot(PRIVET, image.getMatrix());
         image.updateImage();
     }
