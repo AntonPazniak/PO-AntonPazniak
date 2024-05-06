@@ -65,8 +65,8 @@ public final class MainWindow extends JFrame {
     private File openFile;
     private ImageIcon originalIcon;
     private PortableAnymap portableAnymap;
-    private final int width = 720;
-    private final int height = 500;
+    private final int width = 1200;
+    private final int height = 900;
 
     public MainWindow() {
         super("My GIMP");

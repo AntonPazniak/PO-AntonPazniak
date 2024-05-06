@@ -14,23 +14,22 @@ public final class CannyEdgeDetector {
         Splot.gauss(image, 5, 1);
         Splot.sobel(image);
         var dir = Splot.getAngelMatrix();
-//        image.setMatrix(applyNonMaxSuppression(image.getMatrix(), dir));
+
+        //      image.setMatrix(applyNonMaxSuppression(image.getMatrix(), dir));
         image.setMatrix(
                 applyDoubleThreshold(
-                        applyNonMaxSuppression(image.getMatrix(), dir), 100, 200));
+                        applyNonMaxSuppression(image.getMatrix(), dir), 40, 200));
         image.updateImage();
     }
 
-    public static int[][][] applyNonMaxSuppression(int[][][] gradientMagnitude, int[][] dirMatrix) {
+    public static int[][][] applyNonMaxSuppression(int[][][] gradientMagnitude, int[][][] dirMatrix) {
         int height = gradientMagnitude.length;
         int width = gradientMagnitude[0].length;
-        int[][][] newImageMatrix = new int[gradientMagnitude.length][gradientMagnitude[0].length][3];
-
-
+        int[][][] newImageMatrix = new int[height][width][3];
         for (int i = 1; i < height - 1; i++) {
             for (int j = 1; j < width - 1; j++) {
                 int color = gradientMagnitude[i][j][0];
-                int dir = dirMatrix[i][j];
+                int dir = dirMatrix[i][j][0];
 
                 int neighbor1 = 255, neighbor2 = 255;
                 if (dir == 0) {
@@ -59,39 +58,56 @@ public final class CannyEdgeDetector {
 
 
     public static int[][][] applyDoubleThreshold(int[][][] gradientMagnitude, int lowThreshold, int highThreshold) {
-        int[][][] newImagMatrix = new int[gradientMagnitude.length][gradientMagnitude[0].length][3];
+        int[][][] newImageMatrix = new int[gradientMagnitude.length][gradientMagnitude[0].length][3];
 
+        // Проходим по каждому пикселю входной матрицы
         for (int i = 0; i < gradientMagnitude.length; i++) {
             for (int j = 0; j < gradientMagnitude[0].length; j++) {
                 int pixel = gradientMagnitude[i][j][0];
+
+                // Проверяем значение пикселя относительно порогов
                 if (pixel < lowThreshold) {
-                    newImagMatrix[i][j] = blackColor;
+                    // Пиксель ниже нижнего порога, устанавливаем черный цвет
+                    newImageMatrix[i][j] = blackColor;
                 } else if (pixel > highThreshold) {
-                    newImagMatrix[i][j] = witheColor;
+                    // Пиксель выше верхнего порога, устанавливаем белый цвет
+                    newImageMatrix[i][j] = witheColor;
                 } else {
-                    boolean hasStrongNeighbor = false;
-                    for (int di = -1; di <= 1; di++) {
-                        for (int dj = -1; dj <= 1; dj++) {
-                            if (i + di >= 0 && i + di < gradientMagnitude.length &&
-                                    j + dj >= 0 && j + dj < gradientMagnitude[0].length &&
-                                    gradientMagnitude[i + di][j + dj][0] > highThreshold) {
-                                hasStrongNeighbor = true;
-                                break;
-                            }
-                        }
-                        if (hasStrongNeighbor) {
-                            break;
-                        }
+                    // Пиксель между порогами, проверяем соседние пиксели на наличие белого цвета (255)
+                    boolean hasWhiteNeighbor = false;
+
+                    // Проверяем левого соседа (если существует и значение 255)
+                    if (i > 0 && gradientMagnitude[i - 1][j][0] == 255) {
+                        hasWhiteNeighbor = true;
                     }
-                    if (hasStrongNeighbor) {
-                        newImagMatrix[i][j] = witheColor;
+
+                    // Проверяем правого соседа (если существует и значение 255)
+                    if (i < gradientMagnitude.length - 1 && gradientMagnitude[i + 1][j][0] == 255) {
+                        hasWhiteNeighbor = true;
+                    }
+
+                    // Проверяем верхнего соседа (если существует и значение 255)
+                    if (j > 0 && gradientMagnitude[i][j - 1][0] == 255) {
+                        hasWhiteNeighbor = true;
+                    }
+
+                    // Проверяем нижнего соседа (если существует и значение 255)
+                    if (j < gradientMagnitude[0].length - 1 && gradientMagnitude[i][j + 1][0] == 255) {
+                        hasWhiteNeighbor = true;
+                    }
+
+                    // Если есть хотя бы один белый сосед, устанавливаем пиксель в белый цвет
+                    if (hasWhiteNeighbor) {
+                        newImageMatrix[i][j] = witheColor;
                     } else {
-                        newImagMatrix[i][j] = blackColor;
+                        // В противном случае, устанавливаем в черный цвет
+                        newImageMatrix[i][j] = blackColor;
                     }
                 }
             }
         }
-        return newImagMatrix;
+
+        return newImageMatrix;
     }
 
 
