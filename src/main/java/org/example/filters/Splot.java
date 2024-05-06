@@ -1,13 +1,14 @@
 package org.example.filters;
 
+import lombok.Getter;
 import org.example.models.PortableAnymap;
 
 public class Splot {
 
     private static final float[][] sobelX = {
-            {1, 0, -1},
-            {2, 0, -2},
-            {1, 0, -1}
+            {-1, 0, 1},
+            {-2, 0, 2},
+            {-1, 0, 1}
     };
 
     private static final float[][] ROBERTS = {
@@ -113,9 +114,14 @@ public class Splot {
         return newMatrix;
     }
 
+    @Getter
+    private static int[][] angelMatrix;
+
     public static int[][][] applySobel(int[][][] imageMatrix) {
         int startPos = 1;
         float[][] sobelY = transpose(sobelX);
+
+        angelMatrix = new int[imageMatrix.length][imageMatrix[0].length];
 
         int[][][] newMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
@@ -125,21 +131,49 @@ public class Splot {
 
                 int[] color = new int[3];
                 for (int z = 0; z < 3; z++) {
-                    float pixelX = getCore(sobelX, expandMatrix, startPos, x, y, z);
-                    float pixelY = getCore(sobelY, expandMatrix, startPos, x, y, z);
+                    var pixelX = getCore(sobelX, expandMatrix, startPos, x, y, z);
+                    var pixelY = getCore(sobelY, expandMatrix, startPos, x, y, z);
 
                     color[z] = (int) Math.min(255,
                             Math.max(0,
                                     Math.sqrt((
                                             Math.pow(pixelX, 2) +
                                                     Math.pow(pixelY, 2)))));
+
+                    var angel = calculateAngle(pixelX, pixelY);
+                    angelMatrix[x][y] = getAngelMatrix(angel);
+                    //System.out.println(angelMatrix[x][y]);
                 }
 
-                newMatrix[x][y] = color;
+                newMatrix[x - startPos][y - startPos] = color;
             }
         }
 
         return newMatrix;
+    }
+
+    private static int getAngelMatrix(double angle) {
+        if (angle < 0) {
+            angle += 360.;
+        }
+        if (angle <= 22.5 || (angle >= 157.5 && angle <= 202.5) || angle >= 337.5) {
+            return 0;
+        } else if ((angle >= 22.5 && angle <= 67.5) || (angle >= 202.5 && angle <= 247.5)) {
+            return 45;
+        } else if ((angle >= 67.5 && angle <= 112.5) || (angle >= 247.5 && angle <= 292.5)) {
+            return 90;
+        } else {
+            return 135;
+        }
+    }
+
+    public static double calculateAngle(double x, double y) {
+//        double angleRadians = Math.atan2(y, x); // Calculate angle in radians
+//        return Math.toDegrees(angleRadians);
+        var angle = Math.pow(
+                Math.tan(y / x), -1
+        );
+        return Math.toDegrees(angle);
     }
 
     private static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
@@ -149,7 +183,9 @@ public class Splot {
                 pixel += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][z];
             }
         }
-        return Math.abs(pixel);
+        return Math.abs(pixel
+//                /splotMatrix.length
+        );
     }
 
 
