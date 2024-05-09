@@ -99,7 +99,7 @@ public class Splot {
         sumMatrix(applySplot(splotMatrix, imageMatrix), applySplot(transpose(splotMatrix), imageMatrix), imageMatrix);
     }
     @Getter
-    private static int[][][] angelMatrix;
+    private static int[][] angelMatrix;
 
     public static int[][][] applySplot(float[][] splotMatrix, int[][][] imageMatrix) {
         int startPos = splotMatrix.length / 2;
@@ -144,7 +144,7 @@ public class Splot {
 
     @NotNull
     public static int[][][] applySobel(@NotNull int[][][] imageMatrix) {
-        angelMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
+        angelMatrix = new int[imageMatrix.length][imageMatrix[0].length];
         var sobelX = applySplot2(sobel, imageMatrix);
         var sobelY = applySplot2(transpose(sobel), imageMatrix);
         var newImageMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
@@ -157,8 +157,9 @@ public class Splot {
                     color[z] = (int) Math.min(255,
                             Math.max(0,
                                     Math.sqrt((pixelX * pixelX + pixelY * pixelY))));
-                    var angel = calculateAngle(pixelX, pixelY);
-                    angelMatrix[x][y][z] = getAngelMatrix(angel);
+                    angelMatrix[x][y] = (pixelX == 0 && pixelY == 0) ?
+                            (-1) : (getAngel(calculateAngle(pixelX, pixelY)));
+
                 }
                 newImageMatrix[x][y] = color;
             }
@@ -166,23 +167,32 @@ public class Splot {
         return newImageMatrix;
     }
 
-    private static int getAngelMatrix(double angle) {
-        if (angle < 0) {
-            angle += 360.;
-        }
-        if (angle <= 22.5 || (angle >= 157.5 && angle <= 202.5) || angle >= 337.5) {
+    private static int getAngel(double angle) {
+
+        if (angle >= -22.5 && angle <= 22.5) {
             return 0;
-        } else if ((angle >= 22.5 && angle <= 67.5) || (angle >= 202.5 && angle <= 247.5)) {
+        } else if (angle >= 22.5 && angle <= 67.5) {
             return 45;
-        } else if ((angle >= 67.5 && angle <= 112.5) || (angle >= 247.5 && angle <= 292.5)) {
+        } else if (angle >= 67.5 && angle <= 112.5) {
             return 90;
-        } else {
+        } else if (angle >= 112.5 && angle <= 157.5) {
             return 135;
+        } else if (angle >= 157.5 && angle <= 202.5) {
+            return 180;
+        } else if (angle <= -22.5 && angle >= -67.5) {
+            return -45;
+        } else if (angle <= -67.5 && angle >= -112.5) {
+            return -90;
+        } else if (angle <= -112.5 && angle >= -157.5) {
+            return -135;
+        } else {
+            return -1;
         }
     }
 
+
     public static double calculateAngle(double x, double y) {
-        var angle = Math.atan(y / x);
+        var angle = Math.atan2(y, x);
         return Math.toDegrees(angle);
     }
 
@@ -252,5 +262,10 @@ public class Splot {
                 };
             }
         }
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(calculateAngle(255, 255));
     }
 }
