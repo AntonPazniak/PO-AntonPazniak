@@ -2,6 +2,7 @@ package org.example.window;
 
 
 import lombok.Getter;
+import org.example.Hough.Hough;
 import org.example.binarization.Binarization;
 import org.example.canny.CannyEdgeDetector;
 import org.example.filters.Splot;
@@ -61,6 +62,9 @@ public final class MainWindow extends JFrame {
     private final JMenu cannyMenu = new JMenu("Canny");
     private final JMenuItem cannyItem = new JMenuItem("Canny edge detector");
 
+    private final JMenu houghMenu = new JMenu("Hough");
+    private final JMenuItem houghItem = new JMenuItem("Hough");
+
     private final JLabel imageLabel = new JLabel();
     private File openFile;
     private ImageIcon originalIcon;
@@ -109,12 +113,15 @@ public final class MainWindow extends JFrame {
 
         cannyMenu.add(cannyItem);
 
+        houghMenu.add(houghItem);
+
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
         menuBar.add(splotMenu);
         menuBar.add(binarizationMenu);
         menuBar.add(cannyMenu);
+        menuBar.add(houghMenu);
         setJMenuBar(menuBar);
 
         setSize(width, height);
@@ -300,6 +307,11 @@ public final class MainWindow extends JFrame {
 
         cannyItem.addActionListener(e -> {
             CannyEdgeDetector.convert(portableAnymap);
+            resizeImage();
+        });
+
+        houghItem.addActionListener(e -> {
+            Hough.convert(portableAnymap);
             resizeImage();
         });
 

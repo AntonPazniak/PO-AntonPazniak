@@ -15,15 +15,10 @@ public final class CannyEdgeDetector {
         Splot.gauss(image, 5, 1);
         Splot.sobel(image);
         var dir = Splot.getAngelMatrix();
-
-//       image.setMatrix(applyNonMaxSuppression(image.getMatrix(), dir));
-//
         image.setMatrix(
                 applyDoubleThreshold(
                         applyNonMaxSuppression(image.getMatrix(), dir), 10, 100));
         image.updateImage();
-
-
     }
 
     public static int[][][] applyNonMaxSuppression(int[][][] gradientMagnitude, int[][] dirMatrix) {

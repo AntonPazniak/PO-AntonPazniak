@@ -9,15 +9,25 @@ public class Brightness {
         increaseContrast(image.getMatrix(), factor);
     }
 
-    public static void increaseContrast(int[][][] imageMatrix, double factor) {
-        for (int i = 0; i < imageMatrix.length; i++) {
-            for (int j = 0; j < imageMatrix[i].length; j++) {
-                for (int k = 0; k < imageMatrix[i][j].length; k++) {
-                    int color = imageMatrix[i][j][k];
-                    color = Math.min(Math.max((int) (color + color * factor), 0), 255);
-                    imageMatrix[i][j][k] = color;
-                }
+    public static void increaseContrast(int[][][] matrix, double gamma) {
+        int width = matrix.length;
+        int height = matrix[0].length;
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int red = matrix[x][y][0];
+                int green = matrix[x][y][1];
+                int blue = matrix[x][y][2];
+
+                int correctedRed = (int) (255 * Math.pow((double) red / 255, gamma));
+                int correctedGreen = (int) (255 * Math.pow((double) green / 255, gamma));
+                int correctedBlue = (int) (255 * Math.pow((double) blue / 255, gamma));
+
+                matrix[x][y][0] = correctedRed;
+                matrix[x][y][1] = correctedGreen;
+                matrix[x][y][2] = correctedBlue;
             }
         }
     }
+
 }
