@@ -22,8 +22,8 @@ public class SobelFilter {
     };
     private int[][] angelMatrix;
 
-    private double[][][] imageMatrixSobelX;
-    private double[][][] imageMatrixSobelY;
+    private int[][] imageMatrixSobelX;
+    private int[][] imageMatrixSobelY;
 
     public SobelFilter() {
     }
@@ -38,7 +38,7 @@ public class SobelFilter {
     }
 
     @NotNull
-    static double[][][] applySplot(@NotNull int[][] splotMatrix, @NotNull int[][][] imageMatrix) {
+    private double[][][] applySplot(@NotNull int[][] splotMatrix, @NotNull int[][][] imageMatrix) {
         int startPos = splotMatrix.length / 2;
         var newMatrix = new double[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
@@ -98,15 +98,19 @@ public class SobelFilter {
     @NotNull
     public int[][][] applySobel(@NotNull int[][][] imageMatrix) {
         angelMatrix = new int[imageMatrix.length][imageMatrix[0].length];
-        imageMatrixSobelX = applySplot(sobelMatrixX, imageMatrix);
-        imageMatrixSobelY = applySplot(sobelMatrixY, imageMatrix);
+        imageMatrixSobelX = new int[imageMatrix.length][imageMatrix[0].length];
+        imageMatrixSobelY = new int[imageMatrix.length][imageMatrix[0].length];
+        var sobelX = applySplot(sobelMatrixX, imageMatrix);
+        var sobelY = applySplot(sobelMatrixY, imageMatrix);
         var newImageMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
         for (int x = 0; x < imageMatrix.length; x++) {
             for (int y = 0; y < imageMatrix[0].length; y++) {
+                imageMatrixSobelX[x][y] = (int) sobelX[x][y][0];
+                imageMatrixSobelY[x][y] = (int) sobelY[x][y][0];
                 var color = new int[3];
                 for (int z = 0; z < 3; z++) {
-                    var pixelX = imageMatrixSobelX[x][y][z];
-                    var pixelY = imageMatrixSobelY[x][y][z];
+                    var pixelX = sobelX[x][y][z];
+                    var pixelY = sobelY[x][y][z];
                     color[z] = (int) Math.min(255,
                             Math.max(0,
                                     Math.sqrt((pixelX * pixelX + pixelY * pixelY))));

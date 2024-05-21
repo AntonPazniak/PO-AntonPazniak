@@ -1,7 +1,7 @@
 package org.example.canny;
 
+import org.example.filters.GaussFilter;
 import org.example.filters.SobelFilter;
-import org.example.filters.Splot;
 import org.example.models.Direction;
 import org.example.models.PortableAnymap;
 import org.example.point_operation.Desaturation;
@@ -13,9 +13,10 @@ public final class CannyEdgeDetector {
 
     public static void convert(PortableAnymap image) {
         Desaturation.convert(image);
-        Splot.gauss(image, 5, 1);
+        var imageMatrix = image.getMatrix();
+        GaussFilter.convert(imageMatrix, 5, 1);
         var sobel = new SobelFilter();
-        var imageMatrix = sobel.applySobel(image.getMatrix());
+        imageMatrix = sobel.applySobel(image.getMatrix());
         var dir = sobel.getAngelMatrix();
         image.setMatrix(
                 applyDoubleThreshold(

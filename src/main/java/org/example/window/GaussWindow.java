@@ -1,7 +1,7 @@
 package org.example.window;
 
 import lombok.Getter;
-import org.example.filters.Splot;
+import org.example.filters.GaussFilter;
 import org.example.models.PortableAnymap;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public final class GaussWindow extends JFrame {
         gaussWindow.getOkButton().addActionListener(e -> {
             int size = (int) gaussWindow.getSpinner().getValue();
             double step = Double.parseDouble(gaussWindow.getStepTextField().getText());
-            Splot.gauss(image, size, step);
+            GaussFilter.convert(image, size, step);
             MainWindow.getMainWindow().resizeImage();
         });
     }

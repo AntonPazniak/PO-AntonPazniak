@@ -62,34 +62,6 @@ public class Splot {
         image.updateImage();
     }
 
-    public static void gauss(PortableAnymap image, int size, double step) {
-        int[][][] imageMatrix = image.getMatrix();
-        image.setMatrix(applySplot(createGaussianKernel(size, step), imageMatrix));
-    }
-
-
-    public static float[][] createGaussianKernel(int size, double sigma) {
-        float[][] kernel = new float[size][size];
-        float sum = 0;
-
-        int halfSize = size / 2;
-        for (int x = -halfSize; x <= halfSize; x++) {
-            for (int y = -halfSize; y <= halfSize; y++) {
-                float value = (float) (Math.exp(-(x * x + y * y) / (2 * sigma * sigma)) / (2 * Math.PI * sigma * sigma));
-                kernel[x + halfSize][y + halfSize] = value;
-                sum += value;
-            }
-        }
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                kernel[i][j] /= sum;
-            }
-        }
-
-        return kernel;
-    }
-
     public static void starSplot(float[][] splotMatrix, int[][][] imageMatrix) {
         sumMatrix(applySplot(splotMatrix, imageMatrix), applySplot(transpose(splotMatrix), imageMatrix), imageMatrix);
     }
