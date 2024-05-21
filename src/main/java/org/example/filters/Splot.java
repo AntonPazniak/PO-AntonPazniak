@@ -2,7 +2,6 @@ package org.example.filters;
 
 import lombok.Getter;
 import org.example.models.PortableAnymap;
-import org.jetbrains.annotations.NotNull;
 
 public class Splot {
 
@@ -42,10 +41,6 @@ public class Splot {
             {1, 0, -1},
             {1, 0, -1}
     };
-
-    public static void sobel(PortableAnymap image) {
-        image.setMatrix(applySobel(image.getMatrix()));
-    }
 
     public static void roberts(PortableAnymap image) {
         starSplot(ROBERTS, image.getMatrix());
@@ -122,80 +117,6 @@ public class Splot {
         return newMatrix;
     }
 
-    @NotNull
-    public static double[][][] applySplot2(@NotNull float[][] splotMatrix, @NotNull int[][][] imageMatrix) {
-        int startPos = splotMatrix.length / 2;
-        var newMatrix = new double[imageMatrix.length][imageMatrix[0].length][3];
-        int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
-        for (int x = startPos; x < imageMatrix.length + startPos; x++) {
-            for (int y = startPos; y < imageMatrix[0].length + startPos; y++) {
-                double[] color = new double[3];
-                for (int z = 0; z < 3; z++) {
-                    var newPixel = getCore2(splotMatrix, expandMatrix, startPos, x, y, z);
-                    color[z] = newPixel;
-                }
-                newMatrix[x - startPos][y - startPos] = color;
-            }
-        }
-
-
-        return newMatrix;
-    }
-
-    @NotNull
-    public static int[][][] applySobel(@NotNull int[][][] imageMatrix) {
-        angelMatrix = new int[imageMatrix.length][imageMatrix[0].length];
-        var sobelX = applySplot2(sobel, imageMatrix);
-        var sobelY = applySplot2(transpose(sobel), imageMatrix);
-        var newImageMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
-        for (int x = 0; x < imageMatrix.length; x++) {
-            for (int y = 0; y < imageMatrix[0].length; y++) {
-                var color = new int[3];
-                for (int z = 0; z < 3; z++) {
-                    var pixelX = sobelX[x][y][z];
-                    var pixelY = sobelY[x][y][z];
-                    color[z] = (int) Math.min(255,
-                            Math.max(0,
-                                    Math.sqrt((pixelX * pixelX + pixelY * pixelY))));
-                    angelMatrix[x][y] = (pixelX == 0 && pixelY == 0) ?
-                            (-1) : (getAngel(calculateAngle(pixelX, pixelY)));
-
-                }
-                newImageMatrix[x][y] = color;
-            }
-        }
-        return newImageMatrix;
-    }
-
-    private static int getAngel(double angle) {
-
-        if (angle >= -22.5 && angle <= 22.5) {
-            return 0;
-        } else if (angle >= 22.5 && angle <= 67.5) {
-            return 45;
-        } else if (angle >= 67.5 && angle <= 112.5) {
-            return 90;
-        } else if (angle >= 112.5 && angle <= 157.5) {
-            return 135;
-        } else if (angle >= 157.5 && angle <= 202.5) {
-            return 180;
-        } else if (angle <= -22.5 && angle >= -67.5) {
-            return -45;
-        } else if (angle <= -67.5 && angle >= -112.5) {
-            return -90;
-        } else if (angle <= -112.5 && angle >= -157.5) {
-            return -135;
-        } else {
-            return -1;
-        }
-    }
-
-
-    public static double calculateAngle(double x, double y) {
-        var angle = Math.atan2(y, x);
-        return Math.toDegrees(angle);
-    }
-
     private static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
         float pixel = 0;
         for (int i = 0; i < splotMatrix.length; i++) {
@@ -206,18 +127,8 @@ public class Splot {
         return Math.abs(pixel);
     }
 
-    private static float getCore2(float[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
-        float pixel = 0;
-        for (int i = 0; i < splotMatrix.length; i++) {
-            for (int j = 0; j < splotMatrix[i].length; j++) {
-                pixel += splotMatrix[i][j] * expandMatrix[x - startPos + i][y - startPos + j][z];
-            }
-        }
-        return pixel;
-    }
 
-
-    private static int[][][] expandMatrix(int[][][] matrix, int sizeIncrease) {
+    public static int[][][] expandMatrix(int[][][] matrix, int sizeIncrease) {
         int newWidth = matrix.length + 2 * sizeIncrease;
         int newHeight = matrix[0].length + 2 * sizeIncrease;
         int[][][] newMatrix = new int[newWidth][newHeight][3];
@@ -265,7 +176,4 @@ public class Splot {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(calculateAngle(255, 255));
-    }
 }

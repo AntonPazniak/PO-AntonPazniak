@@ -5,7 +5,9 @@ import lombok.Getter;
 import org.example.Hough.Hough;
 import org.example.binarization.Binarization;
 import org.example.canny.CannyEdgeDetector;
+import org.example.filters.SobelFilter;
 import org.example.filters.Splot;
+import org.example.harris.Harris;
 import org.example.histogram.Histogram;
 import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
@@ -61,6 +63,9 @@ public final class MainWindow extends JFrame {
     // Canny
     private final JMenu cannyMenu = new JMenu("Canny");
     private final JMenuItem cannyItem = new JMenuItem("Canny edge detector");
+    //Harris
+    private final JMenu harrisMenu = new JMenu("Harris");
+    private final JMenuItem harrisItem = new JMenuItem("Harris");
 
     private final JMenu houghMenu = new JMenu("Hough");
     private final JMenuItem houghItem = new JMenuItem("Hough");
@@ -115,6 +120,8 @@ public final class MainWindow extends JFrame {
 
         houghMenu.add(houghItem);
 
+        harrisMenu.add(harrisItem);
+
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
@@ -122,6 +129,7 @@ public final class MainWindow extends JFrame {
         menuBar.add(binarizationMenu);
         menuBar.add(cannyMenu);
         menuBar.add(houghMenu);
+        menuBar.add(harrisMenu);
         setJMenuBar(menuBar);
 
         setSize(width, height);
@@ -269,7 +277,7 @@ public final class MainWindow extends JFrame {
         testItem.addActionListener(e -> SplotWindow.createWindow(portableAnymap));
 
         sobelItem.addActionListener(e -> {
-            Splot.sobel(portableAnymap);
+            SobelFilter.convert(portableAnymap);
             resizeImage();
         });
 
@@ -312,6 +320,11 @@ public final class MainWindow extends JFrame {
 
         houghItem.addActionListener(e -> {
             Hough.convert(portableAnymap);
+            resizeImage();
+        });
+
+        harrisItem.addActionListener(e -> {
+            Harris.convert(portableAnymap);
             resizeImage();
         });
 
