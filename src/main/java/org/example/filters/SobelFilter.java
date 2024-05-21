@@ -22,8 +22,12 @@ public class SobelFilter {
     };
     private int[][] angelMatrix;
 
-    private int[][] imageMatrixSobelX;
-    private int[][] imageMatrixSobelY;
+    private double[][][] imageMatrixSobelX;
+    private double[][][] imageMatrixSobelY;
+
+    public static void convert(PortableAnymap image) {
+        var sobel = new SobelFilter(image);
+    }
 
     public SobelFilter() {
     }
@@ -33,12 +37,8 @@ public class SobelFilter {
         image.setMatrix(sobel.applySobel(image.getMatrix()));
     }
 
-    public static void convert(PortableAnymap image) {
-        var sobel = new SobelFilter(image);
-    }
-
     @NotNull
-    private double[][][] applySplot(@NotNull int[][] splotMatrix, @NotNull int[][][] imageMatrix) {
+    static double[][][] applySplot(@NotNull int[][] splotMatrix, @NotNull int[][][] imageMatrix) {
         int startPos = splotMatrix.length / 2;
         var newMatrix = new double[imageMatrix.length][imageMatrix[0].length][3];
         int[][][] expandMatrix = expandMatrix(imageMatrix, startPos);
@@ -55,6 +55,33 @@ public class SobelFilter {
 
 
         return newMatrix;
+    }
+
+
+    @NotNull
+    public int[][][] applySobel(@NotNull int[][][] imageMatrix) {
+        angelMatrix = new int[imageMatrix.length][imageMatrix[0].length];
+        imageMatrixSobelX = applySplot(sobelMatrixX, imageMatrix);
+        imageMatrixSobelY = applySplot(sobelMatrixY, imageMatrix);
+        var newImageMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
+        for (int x = 0; x < imageMatrix.length; x++) {
+            for (int y = 0; y < imageMatrix[0].length; y++) {
+                var color = new int[3];
+                for (int z = 0; z < 3; z++) {
+                    var pixelX = imageMatrixSobelX[x][y][z];
+                    var pixelY = imageMatrixSobelY[x][y][z];
+                    color[z] = (int) Math.min(255,
+                            Math.max(0,
+                                    Math.sqrt((pixelX * pixelX + pixelY * pixelY))));
+                    angelMatrix[x][y] = (pixelX == 0 && pixelY == 0) ?
+                            (-1) : (getAngel(calculateAngle(pixelX, pixelY)));
+
+                }
+                newImageMatrix[x][y] = color;
+            }
+
+        }
+        return newImageMatrix;
     }
 
     private static int getAngel(double angle) {
@@ -85,6 +112,7 @@ public class SobelFilter {
         return Math.toDegrees(angle);
     }
 
+
     private static float getCore(int[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
         float pixel = 0;
         for (int i = 0; i < splotMatrix.length; i++) {
@@ -93,36 +121,6 @@ public class SobelFilter {
             }
         }
         return pixel;
-    }
-
-    @NotNull
-    public int[][][] applySobel(@NotNull int[][][] imageMatrix) {
-        angelMatrix = new int[imageMatrix.length][imageMatrix[0].length];
-        imageMatrixSobelX = new int[imageMatrix.length][imageMatrix[0].length];
-        imageMatrixSobelY = new int[imageMatrix.length][imageMatrix[0].length];
-        var sobelX = applySplot(sobelMatrixX, imageMatrix);
-        var sobelY = applySplot(sobelMatrixY, imageMatrix);
-        var newImageMatrix = new int[imageMatrix.length][imageMatrix[0].length][3];
-        for (int x = 0; x < imageMatrix.length; x++) {
-            for (int y = 0; y < imageMatrix[0].length; y++) {
-                imageMatrixSobelX[x][y] = (int) sobelX[x][y][0];
-                imageMatrixSobelY[x][y] = (int) sobelY[x][y][0];
-                var color = new int[3];
-                for (int z = 0; z < 3; z++) {
-                    var pixelX = sobelX[x][y][z];
-                    var pixelY = sobelY[x][y][z];
-                    color[z] = (int) Math.min(255,
-                            Math.max(0,
-                                    Math.sqrt((pixelX * pixelX + pixelY * pixelY))));
-                    angelMatrix[x][y] = (pixelX == 0 && pixelY == 0) ?
-                            (-1) : (getAngel(calculateAngle(pixelX, pixelY)));
-
-                }
-                newImageMatrix[x][y] = color;
-            }
-
-        }
-        return newImageMatrix;
     }
 
 }

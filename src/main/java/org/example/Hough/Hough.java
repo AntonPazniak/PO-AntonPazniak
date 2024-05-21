@@ -27,7 +27,9 @@ public class Hough {
                     for (int theta = 0; theta < 180; theta++) {
                         double thetaRad = Math.toRadians(theta);
                         int rho = (int) (x * Math.cos(thetaRad) + y * Math.sin(thetaRad));
-                        accumulator[rho + maxRho][theta]++;
+                        if (rho + maxRho >= 0 && rho + maxRho < 2 * maxRho) {
+                            accumulator[rho + maxRho][theta]++;
+                        }
                     }
                 }
             }

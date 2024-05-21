@@ -89,7 +89,7 @@ public class Splot {
         return newMatrix;
     }
 
-    private static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
+    public static float getCore(float[][] splotMatrix, int[][][] expandMatrix, int startPos, int x, int y, int z) {
         float pixel = 0;
         for (int i = 0; i < splotMatrix.length; i++) {
             for (int j = 0; j < splotMatrix[i].length; j++) {
