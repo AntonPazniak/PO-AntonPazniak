@@ -30,7 +30,7 @@ public class Harris {
         // Initialize variables for Harris response calculation
         int[][][] imageMatrix = image.getMatrix();
         double k = 0.04;
-        double threshold = 0.01; // Adjust this value as necessary
+        double threshold = 1000; // Adjust this value as necessary
         int width = image.getWidth();
         int height = image.getHeight();
         double[][] R = new double[height][width];
@@ -70,9 +70,8 @@ public class Harris {
         // Element-wise multiplication of matrices
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                resultMatrix[i][j][0] = firstMatrix[i][j][0] * secondMatrix[i][j][0];
-                resultMatrix[i][j][1] = firstMatrix[i][j][1] * secondMatrix[i][j][1];
-                resultMatrix[i][j][2] = firstMatrix[i][j][2] * secondMatrix[i][j][2];
+                var pixel =  Math.min(250,Math.max(0,firstMatrix[i][j][0] * secondMatrix[i][j][0]));
+                resultMatrix[i][j] = new double [] {pixel,pixel,pixel};
             }
         }
         return resultMatrix;

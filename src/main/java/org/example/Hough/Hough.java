@@ -27,16 +27,14 @@ public class Hough {
                     for (int theta = 0; theta < 180; theta++) {
                         double thetaRad = Math.toRadians(theta);
                         int rho = (int) (x * Math.cos(thetaRad) + y * Math.sin(thetaRad));
-                        if (rho + maxRho >= 0 && rho + maxRho < 2 * maxRho) {
-                            accumulator[rho + maxRho][theta]++;
-                        }
+                        accumulator[rho + maxRho][theta]++;
                     }
                 }
             }
         }
 
         // Calculating the dynamic threshold
-        int threshold = calculateThreshold(accumulator);
+        int threshold = height/2;
 
         // Detecting lines by finding peaks in the accumulator
         for (int rho = 0; rho < 2 * maxRho; rho++) {
