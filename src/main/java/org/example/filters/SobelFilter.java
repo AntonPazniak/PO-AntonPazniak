@@ -9,13 +9,13 @@ import static org.example.filters.Splot.expandMatrix;
 @Getter
 public class SobelFilter {
 
-    private final int[][] sobelMatrixX = {
+    private static final int[][] sobelMatrixX = {
             {-1, 0, 1},
             {-2, 0, 2},
             {-1, 0, 1}
     };
 
-    private final int[][] sobelMatrixY = {
+    private static final int[][] sobelMatrixY = {
             {-1, -2, -1},
             {0, 0, 0},
             {1, 2, 1}
@@ -121,6 +121,29 @@ public class SobelFilter {
             }
         }
         return pixel;
+    }
+
+    public static int[][] computeGradient2D(int[][] grayscale) {
+        int height = grayscale.length;
+        int width = grayscale[0].length;
+        int[][] gradient = new int[height][width];
+
+        for (int i = 1; i < height - 1; i++) {
+            for (int j = 1; j < width - 1; j++) {
+                int gx = 0;
+                int gy = 0;
+                for (int k = 0; k < 3; k++) {
+                    for (int l = 0; l < 3; l++) {
+                        int x = i + k - 1;
+                        int y = j + l - 1;
+                        gx += grayscale[x][y] * sobelMatrixX[k][l];
+                        gy += grayscale[x][y] * sobelMatrixY[k][l];
+                    }
+                }
+                gradient[i][j] = (int) Math.sqrt(gx * gx + gy * gy);
+            }
+        }
+        return gradient;
     }
 
 }

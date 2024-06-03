@@ -13,6 +13,7 @@ import org.example.models.PortableAnymap;
 import org.example.pars.Convert;
 import org.example.point_operation.Desaturation;
 import org.example.point_operation.Negative;
+import org.example.vincent_soille.WatershedSegmentation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,6 +67,9 @@ public final class MainWindow extends JFrame {
     //Harris
     private final JMenu harrisMenu = new JMenu("Harris");
     private final JMenuItem harrisItem = new JMenuItem("Harris");
+    // Watershed segmentation
+    private final JMenu watershedSegmentationMenu = new JMenu("WateSegm");
+    private final JMenuItem watershedSegmentationItem = new JMenuItem("Watershed Segmentation");
 
     private final JMenu houghMenu = new JMenu("Hough");
     private final JMenuItem houghItem = new JMenuItem("Hough");
@@ -122,6 +126,8 @@ public final class MainWindow extends JFrame {
 
         harrisMenu.add(harrisItem);
 
+        watershedSegmentationMenu.add(watershedSegmentationItem);
+
         menuBar.add(fileMenu);
         menuBar.add(pointMenu);
         menuBar.add(histogramMenu);
@@ -130,6 +136,7 @@ public final class MainWindow extends JFrame {
         menuBar.add(cannyMenu);
         menuBar.add(houghMenu);
         menuBar.add(harrisMenu);
+        menuBar.add(watershedSegmentationMenu);
         setJMenuBar(menuBar);
 
         setSize(width, height);
@@ -325,6 +332,11 @@ public final class MainWindow extends JFrame {
 
         harrisItem.addActionListener(e -> {
             Harris.convert(portableAnymap);
+            resizeImage();
+        });
+
+        watershedSegmentationItem.addActionListener(e -> {
+            WatershedSegmentation.convert(portableAnymap);
             resizeImage();
         });
 

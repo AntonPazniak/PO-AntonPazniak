@@ -24,6 +24,17 @@ public final class CannyEdgeDetector {
         image.updateImage();
     }
 
+    public static int[][][] convert(int[][][] image) {
+        Desaturation.convertP3(image);
+        var imageMatrix = image;
+        imageMatrix = GaussFilter.convert(imageMatrix, 5, 1);
+        var sobel = new SobelFilter();
+        imageMatrix = sobel.applySobel(imageMatrix);
+        var dir = sobel.getAngelMatrix();
+        return applyDoubleThreshold(
+                applyNonMaxSuppression(imageMatrix, dir), 10, 100);
+    }
+
     public static int[][][] applyNonMaxSuppression(int[][][] gradientMagnitude, int[][] dirMatrix) {
         int height = gradientMagnitude.length;
         int width = gradientMagnitude[0].length;

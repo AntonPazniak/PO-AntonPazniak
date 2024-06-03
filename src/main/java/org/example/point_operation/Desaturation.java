@@ -25,4 +25,20 @@ public class Desaturation {
         }
         return newMatrix;
     }
+
+    public static int[][] convertToGrayscale2D(int[][][] rgb) {
+        int height = rgb.length;
+        int width = rgb[0].length;
+        int[][] grayscale = new int[height][width];
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int r = rgb[i][j][0];
+                int g = rgb[i][j][1];
+                int b = rgb[i][j][2];
+                grayscale[i][j] = (int) (0.299 * r + 0.587 * g + 0.114 * b);
+            }
+        }
+        return grayscale;
+    }
 }

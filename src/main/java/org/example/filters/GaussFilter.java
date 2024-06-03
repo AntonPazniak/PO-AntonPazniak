@@ -1,24 +1,28 @@
 package org.example.filters;
 
 import org.example.models.PortableAnymap;
+import org.jetbrains.annotations.NotNull;
 
 import static org.example.filters.Splot.applySplot;
 
 public class GaussFilter {
 
-    public static void convert(PortableAnymap image, int size, double step) {
+    public static void convert(@NotNull PortableAnymap image, int size, double step) {
         int[][][] imageMatrix = image.getMatrix();
         image.setMatrix(applySplot(createGaussianKernel(size, step), imageMatrix));
     }
 
+    @NotNull
     public static int[][][] convert(int[][][] imageMatrix, int size, double step) {
         return applySplot(createGaussianKernel(size, step), imageMatrix);
     }
 
+    @NotNull
     public static double[][][] convert(double[][][] imageMatrix, int size, double step) {
         return applySplotFloat(createGaussianKernel(size, step), imageMatrix);
     }
 
+    @NotNull
     private static float[][] createGaussianKernel(int size, double sigma) {
         float[][] kernel = new float[size][size];
         float sum = 0;

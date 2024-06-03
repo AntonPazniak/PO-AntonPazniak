@@ -39,6 +39,18 @@ public class PortableAnymap {
         return copy;
     }
 
+    public int[][][] copyMatrix(int[][][] matrix) {
+        int[][][] copy = new int[matrix.length][][];
+        for (int i = 0; i < matrix.length; i++) {
+            copy[i] = new int[matrix[i].length][];
+            for (int j = 0; j < matrix[i].length; j++) {
+                copy[i][j] = new int[matrix[i][j].length];
+                System.arraycopy(matrix[i][j], 0, copy[i][j], 0, matrix[i][j].length);
+            }
+        }
+        return copy;
+    }
+
     public void setMatrix(int[][][] matrix) {
         this.matrix = matrix;
         updateImage();
